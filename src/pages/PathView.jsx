@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router";
 import { courses } from "../data/courses";
+import { PageTransition } from "../components/PageTransition";
 
 export function PathView() {
   const { courseId } = useParams();
@@ -11,10 +12,12 @@ export function PathView() {
 
   if (!course) {
     return (
+      <PageTransition>
       <main className="path-view">
         <h2>Course not found</h2>
         <button className="ghost-button" onClick={() => navigate("/")}>Back to Home</button>
       </main>
+      </PageTransition>
     );
   }
 
@@ -22,6 +25,7 @@ export function PathView() {
   const lessons = course.lessons;
 
   return (
+    <PageTransition>
     <main className="path-view" style={{ "--accent": course.accent }}>
       <header className="path-header">
         <button className="ghost-button" onClick={() => navigate("/")}>&larr; Courses</button>
@@ -39,18 +43,22 @@ export function PathView() {
           return (
             <div key={lesson.id} className="path-node-wrapper" style={{ transform: `translateX(${offset}px)` }}>
               {isCurrent && <div className="start-tooltip">START</div>}
-              <button
-                className={`path-node ${isCurrent ? "current" : ""} ${isDone ? "done" : ""} ${isLockedNode ? "locked" : ""}`}
-                onClick={() => !isLockedNode && navigate(`/course/${course.id}/lesson/${index}`)}
-                disabled={isLockedNode || isLocked}
-                title={lesson.title}
-              >
-                {isDone ? "\u2714" : index + 1}
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                <button
+                  className={`path-node ${isCurrent ? "current" : ""} ${isDone ? "done" : ""} ${isLockedNode ? "locked" : ""}`}
+                  onClick={() => !isLockedNode && navigate(`/course/${course.id}/lesson/${index}`)}
+                  disabled={isLockedNode || isLocked}
+                  title={lesson.title}
+                >
+                  {isDone ? "\u2714" : index + 1}
+                </button>
+                <div className="node-title-label">{lesson.title}</div>
+              </div>
             </div>
           );
         })}
       </div>
     </main>
+    </PageTransition>
   );
 }

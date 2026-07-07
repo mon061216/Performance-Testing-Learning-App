@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation, useOutlet } from "react-router";
+import { AnimatePresence } from "motion/react";
+import { PageTransition } from "../components/PageTransition";
 import { MAX_LIVES, RESTOCK_MS } from "../data/courses";
 import { useTimer, formatTimeLeft } from "../hooks/useTimer";
 import { StatBar } from "../components/StatBar";
@@ -11,6 +13,7 @@ export default function App() {
   const [completed, setCompleted] = useState({});
   const [lockUntil, setLockUntil] = useState(null);
   const now = useTimer();
+  const location = useLocation();
 
   const isLocked = lives <= 0 && lockUntil && now < lockUntil;
   const restockText = isLocked ? formatTimeLeft(lockUntil - now) : "0m 00s";
@@ -39,26 +42,19 @@ export default function App() {
     });
   };
 
+  const element = useOutlet({
+    lives, setLives, xp, setXp, streak, setStreak,
+    completed, setCompleted, lockUntil, setLockUntil,
+    isLocked, restockText, handleCompleteExercise, handleFailExercise
+  });
+
   return (
     <div className="app-shell">
       <StatBar lives={lives} xp={xp} streak={streak} isLocked={isLocked} restockText={restockText} />
-      <div className="app-grid-full">
-        <Outlet context={{
-          lives,
-          setLives,
-          xp,
-          setXp,
-          streak,
-          setStreak,
-          completed,
-          setCompleted,
-          lockUntil,
-          setLockUntil,
-          isLocked,
-          restockText,
-          handleCompleteExercise,
-          handleFailExercise
-        }} />
+      <div className="app-grid-full" style={{ overflowX: 'hidden' }}>
+        <AnimatePresence mode="wait">
+          {element && React.cloneElement(element, { key: location.pathname })}
+        </AnimatePresence>
       </div>
     </div>
   );

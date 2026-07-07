@@ -970,3 +970,359 @@ button {
     width: 100%;
   }
 }
+
+/* --- CENTERED LAYOUT FOR EXERCISE --- */
+.centered-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: #f8fafc;
+  color: #1e293b;
+  padding-bottom: 100px;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+.centered-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 40px;
+  gap: 20px;
+}
+
+.close-lesson {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.progress-bar-container {
+  flex: 1;
+  background: #e2e8f0;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: #22c55e;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.exercise-content {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.prompt-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.markdown-theory {
+  color: #475569;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.markdown-theory h3 {
+  color: #0f172a;
+  margin-top: 10px;
+}
+
+.interactive-widget {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.widget-visual {
+  background: #f1f5f9;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.widget-slots {
+  background: #ffffff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.widget-slot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.widget-slot .slot-number {
+  color: #64748b;
+  font-weight: bold;
+  width: 20px;
+}
+
+.widget-slot .slot-content {
+  flex: 1;
+  min-height: 60px;
+  border: 2px dashed #94a3b8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 0;
+  background: #f8fafc;
+}
+
+.widget-slot.filled .slot-content {
+  border-style: solid;
+  border-color: transparent;
+}
+
+.widget-slot .slot-content .shape-card {
+  margin: 0;
+  width: 100%;
+}
+
+.available-cards-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.cards-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.run-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.run-btn {
+  background: transparent;
+  border: 2px solid #52525b;
+  color: #52525b;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: not-allowed;
+  transition: all 0.2s;
+}
+
+.run-btn.active {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  cursor: pointer;
+}
+
+.run-btn.active:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.exercise-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  border-top: 2px solid #e2e8f0;
+  background: white;
+}
+
+.exercise-footer.correct {
+  background: #dcfce7;
+  border-top-color: #22c55e;
+  color: #166534;
+}
+
+.exercise-footer.try, .exercise-footer.answer {
+  background: #ffedd5;
+  border-top-color: #f97316;
+  color: #9a3412;
+}
+
+.footer-content {
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feedback-message h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.why-btn {
+  background: transparent;
+  color: currentColor;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.8;
+  font-size: 1.1rem;
+}
+
+.why-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.continue-btn {
+  background: currentColor;
+  color: white !important;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 24px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.exercise-footer.correct .continue-btn {
+  background: #22c55e;
+}
+.exercise-footer.try .continue-btn, .exercise-footer.answer .continue-btn {
+  background: #f97316;
+}
+
+/* Modal CSS */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  color: #1e293b;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #0f172a;
+}
+
+.modal-body {
+  background: #f8fafc;
+  color: #334155;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-dots .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  display: inline-block;
+  margin: 0 4px;
+}
+.pagination-dots .dot.active {
+  background: #3b82f6;
+}
+
+.node-title-label {
+  position: absolute;
+  left: 85px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+  border: 2px solid #e2e8f0;
+  font-size: 0.95rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Animated Mermaid Paths */
+.mermaid-container svg .edgePath .path,
+.mermaid-container svg path.transition {
+  stroke-dasharray: 8, 8;
+  animation: flowLine 1s linear infinite;
+  stroke-width: 2.5px !important;
+}
+
+@keyframes flowLine {
+  from { stroke-dashoffset: 16; }
+  to { stroke-dashoffset: 0; }
+}
+
+.mermaid-container svg node rect,
+.mermaid-container svg node circle,
+.mermaid-container svg node polygon {
+  transition: all 0.3s ease;
+}
+
+.mermaid-container svg node:hover rect,
+.mermaid-container svg node:hover circle,
+.mermaid-container svg node:hover polygon {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}

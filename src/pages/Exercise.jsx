@@ -3,6 +3,11 @@ import { useParams, useNavigate, useOutletContext } from "react-router";
 import { courses } from "../data/courses";
 import { ShapeIcon } from "../components/ShapeIcon";
 import { LockoutPanel } from "./LockoutPanel";
+import { MermaidDiagram } from "../components/MermaidDiagram";
+import ReactMarkdown from "react-markdown";
+import { motion, AnimatePresence } from "motion/react";
+import { ExplanationModal } from "../components/ExplanationModal";
+import { PageTransition } from "../components/PageTransition";
 
 export function Exercise() {
   const { courseId, lessonIndex: lessonIndexStr } = useParams();
@@ -18,23 +23,16 @@ export function Exercise() {
   } = useOutletContext();
 
   const course = courses.find((c) => c.id === courseId);
-
   const lesson = course?.lessons?.[lessonIndex];
-  const questionIndex = 0; // The source code had state-based questionIndex but initialized to 0, let's keep track of it if there are multiple questions.
-  // Wait, let's look at how questionIndex was managed in the original Exercise component.
-  // In the original component:
-  // const [questionIndex, setQuestionIndex] = useState(0);
-  // const question = lesson.questions[questionIndex];
-  // Yes! The component itself tracks questionIndex in state.
-
+  
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
   const question = lesson?.questions?.[currentQuestionIndex];
 
   const [placements, setPlacements] = useState([]);
   const [attempts, setAttempts] = useState(0);
   const [result, setResult] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
+  const [showExplanation, setShowExplanation] = useState(false);
 
   // Re-initialize state when route changes or question index changes
   useEffect(() => {
@@ -43,6 +41,7 @@ export function Exercise() {
       setAttempts(0);
       setResult(null);
       setDraggedId(null);
+      setShowExplanation(false);
     }
   }, [courseId, lessonIndex, currentQuestionIndex, question]);
 
@@ -55,38 +54,24 @@ export function Exercise() {
   const availableCards = shuffledCards.filter((card) => !placedIds.includes(card.id));
   const isFilled = placements.length > 0 && placements.every(Boolean);
 
-  const isFirstLesson = lessonIndex === 0;
-  const isSwimlane = course?.id === "swimlane";
-  const isBranched = lesson?.isBranched;
-  const layoutClass = isFirstLesson ? "slots-grid" : isBranched ? "slots-branch" : isSwimlane ? "slots-swimlane" : "slots-flow";
-
-  const randomDescription = useMemo(() => {
-    if (!question) return "";
-    if (Array.isArray(question.description)) {
-      return question.description[Math.floor(Math.random() * question.description.length)];
-    }
-    return question.description;
-  }, [courseId, lessonIndex, currentQuestionIndex, question]);
-
   if (!course || !lesson || !question) {
     return (
-      <main className="exercise">
-        <h2>Lesson not found</h2>
-        <button className="ghost-button" onClick={() => navigate("/")}>Back to Home</button>
-      </main>
+      <PageTransition>
+        <main className="exercise centered-layout">
+          <h2>Lesson not found</h2>
+          <button className="ghost-button" onClick={() => navigate("/")}>Back to Home</button>
+        </main>
+      </PageTransition>
     );
   }
 
   if (isLocked) {
-    return <LockoutPanel restockText={restockText} onBack={() => navigate(`/course/${course.id}`)} />;
+    return (
+      <PageTransition>
+        <LockoutPanel restockText={restockText} onBack={() => navigate(`/course/${course.id}`)} />
+      </PageTransition>
+    );
   }
-
-  const resetQuestion = () => {
-    setPlacements(Array(question.answer.length).fill(null));
-    setAttempts(0);
-    setResult(null);
-    setDraggedId(null);
-  };
 
   const dropCard = (slotIndex, cardId) => {
     if (isLocked || result?.locked) return;
@@ -106,143 +91,153 @@ export function Exercise() {
     if (isLocked) return;
     const correct = placements.every((id, index) => id === question.answer[index]);
     if (correct) {
-      setResult({ kind: "correct", locked: true, title: "Great diagram!", text: question.explanation });
-      setTimeout(() => {
-        if (currentQuestionIndex < lesson.questions.length - 1) {
-          setCurrentQuestionIndex((i) => i + 1);
-        } else {
-          handleCompleteExercise(course.id, lessonIndex);
-          navigate(`/course/${course.id}`);
-        }
-      }, 1500);
+      setResult({ kind: "correct", locked: true, title: "Chính xác!" });
       return;
     }
 
-    if (attempts === 0) {
-      setAttempts(1);
-      setResult({ kind: "try", locked: false, title: "Almost.", text: "Rearrange the shapes and try one more time." });
-      return;
-    }
-
-    setAttempts(2);
-    setResult({ kind: "answer", locked: true, title: "Answer revealed", text: question.explanation });
-    setPlacements(question.answer);
+    // Immediately fail, no retry
+    setResult({ kind: "answer", locked: true, title: "Chưa chính xác!" });
+    setPlacements(question.answer); // Show them the correct answer
     handleFailExercise();
+  };
 
-    setTimeout(() => {
-      if (lives - 1 <= 0) {
-        navigate(`/course/${course.id}`);
-      }
-    }, 2000);
+  const handleNext = () => {
+    // Check if lives reached 0, if so, redirect immediately (handled by handleFailExercise or LockoutPanel)
+    // But since handleFailExercise just sets lives, the parent might already switch to LockoutPanel.
+    // If not locked out, we can move to the next question or complete.
+    
+    if (currentQuestionIndex < lesson.questions.length - 1) {
+      setCurrentQuestionIndex((i) => i + 1);
+    } else {
+      // Cho phép qua bài luôn dù làm sai, vì người dùng đã xem giải thích
+      handleCompleteExercise(course.id, lessonIndex);
+      navigate(`/course/${course.id}`);
+    }
   };
 
   const findCard = (id) => question.cards.find((card) => card.id === id);
 
   return (
-    <main className="exercise" style={{ "--accent": course.accent }}>
-      <header className="exercise-header">
-        <button className="ghost-button" onClick={() => navigate(`/course/${course.id}`)}>&times; Quit</button>
-        <div className="progress-track" style={{ flex: 1, margin: "0 20px" }}>
-          <span style={{ width: `${Math.round((currentQuestionIndex / lesson.questions.length) * 100)}%` }} />
+    <PageTransition>
+    <main className="exercise centered-layout" style={{ "--accent": course.accent }}>
+      
+      <div className="centered-header">
+        <button className="close-lesson" onClick={() => navigate(`/course/${course.id}`)}>&times;</button>
+        <div className="progress-bar-container">
+          <div className="progress-bar-fill" style={{ width: `${((currentQuestionIndex + 1) / lesson.questions.length) * 100}%`}}></div>
         </div>
-      </header>
-
-      <div className="exercise-copy">
-        <span className="lesson-pill">
-          Lesson {lessonIndex + 1} of {course.lessons.length}
-          {lesson.questions.length > 1 ? ` | Question ${currentQuestionIndex + 1} of ${lesson.questions.length}` : ""}
-        </span>
-        <h1>{question.prompt}</h1>
-        {question.scenario && (
-          <div className="scenario-box">
-            <p>{question.scenario}</p>
-          </div>
-        )}
-        {randomDescription && <p className="description-text">{randomDescription}</p>}
       </div>
 
-      <div className="workspace">
-        <section className={`slots-container ${layoutClass}`} aria-label="Answer slots">
-          {question.slots.map((slot, index) => {
-            const card = placements[index] ? findCard(placements[index]) : null;
-            const isCorrect = result?.locked && placements[index] === question.answer[index];
+      <div className="exercise-content">
+        <div className="prompt-header">
+          <h2>{question.prompt}</h2>
+          <div className="markdown-theory">
+            <ReactMarkdown>{question.theory || ""}</ReactMarkdown>
+          </div>
+        </div>
 
-            const slotContent = (
-              <div
-                key={`${slot}-${index}`}
-                className={`slot ${card ? "filled" : ""} ${isCorrect ? "slot-correct" : ""}`}
-                style={isSwimlane && !isFirstLesson ? { marginLeft: `${index * 40}px` } : {}}
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={() => draggedId && dropCard(index, draggedId)}
-              >
-                <span className="slot-number">{index + 1}</span>
-                {!isSwimlane || isFirstLesson ? <small>{slot}</small> : null}
-                {card ? (
-                  <button className={`shape-card placed ${card.type}`} onClick={() => removeCard(index)}>
-                    <ShapeIcon type={card.type} />
-                    <span>{card.label}</span>
-                  </button>
-                ) : (
-                  <span className="empty-slot">Drop shape</span>
-                )}
-              </div>
-            );
+        <div className="interactive-widget">
+          {question.theoryMermaid && (
+            <div className="widget-visual">
+              <MermaidDiagram chart={question.theoryMermaid} />
+            </div>
+          )}
+          
+          <div className="widget-slots">
+            {question.slots.map((slot, index) => {
+              const card = placements[index] ? findCard(placements[index]) : null;
+              const isCorrect = result?.locked && placements[index] === question.answer[index];
+              const isWrong = result?.kind === 'try' && placements[index] !== question.answer[index] && placements[index];
 
-            // Swimlane wrappers
-            if (isSwimlane && !isFirstLesson) {
               return (
-                <div className="swimlane-row" key={`${slot}-row-${index}`}>
-                  <div className="swimlane-header">{slot}</div>
-                  <div className="swimlane-cell">
-                    {slotContent}
+                <div
+                  key={`${slot}-${index}`}
+                  className={`widget-slot ${card ? "filled" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={() => draggedId && dropCard(index, draggedId)}
+                >
+                  <span className="slot-number">{index + 1}</span>
+                  <div className="slot-content">
+                    {card ? (
+                      <motion.button 
+                        layoutId={`card-${card.id}`}
+                        className={`shape-card placed ${card.type}`} 
+                        onClick={() => removeCard(index)}
+                      >
+                        <ShapeIcon type={card.type} />
+                        <span>{card.label}</span>
+                      </motion.button>
+                    ) : (
+                      <span className="slot-placeholder"></span>
+                    )}
                   </div>
                 </div>
               );
-            }
-
-            return slotContent;
-          })}
-        </section>
-
-        <section className="bank" aria-label="Draggable shapes">
-          <div className="bank-head">
-            <strong>Shape bank</strong>
-            <span>{availableCards.length} left</span>
+            })}
           </div>
-          <div className="cards">
-            {availableCards.map((card) => (
-              <button
-                key={card.id}
-                draggable={!isLocked && !result?.locked}
-                className={`shape-card ${card.type}`}
-                onDragStart={() => setDraggedId(card.id)}
-                onDragEnd={() => setDraggedId(null)}
-                onClick={() => {
-                  const emptyIndex = placements.findIndex((id) => !id);
-                  if (emptyIndex >= 0) dropCard(emptyIndex, card.id);
-                }}
+        </div>
+
+        <div className="available-cards-container">
+          <div className="cards-horizontal">
+            <AnimatePresence>
+              {availableCards.map((card) => (
+                <motion.button
+                  key={card.id}
+                  layoutId={`card-${card.id}`}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  draggable={!isLocked && !result?.locked}
+                  className={`shape-card ${card.type}`}
+                  onDragStart={() => setDraggedId(card.id)}
+                  onDragEnd={() => setDraggedId(null)}
+                  onClick={() => {
+                    const emptyIndex = placements.findIndex((id) => !id);
+                    if (emptyIndex >= 0) dropCard(emptyIndex, card.id);
+                  }}
+                >
+                  <ShapeIcon type={card.type} />
+                  <span>{card.label}</span>
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {!result && (
+           <div className="run-button-container">
+              <button 
+                className={`run-btn ${isFilled ? 'active' : ''}`} 
+                onClick={checkAnswer}
+                disabled={!isFilled}
               >
-                <ShapeIcon type={card.type} />
-                <span>{card.label}</span>
+                &#9654; Run
               </button>
-            ))}
-          </div>
-        </section>
+           </div>
+        )}
       </div>
 
       {result && (
-        <div className={`feedback ${result.kind}`}>
-          <strong>{result.title}</strong>
-          <span>{result.text}</span>
-        </div>
+        <footer className={`exercise-footer ${result.kind}`}>
+          <div className="footer-content">
+            <div className="feedback-message">
+              <h3>{result.title}</h3>
+            </div>
+            <div className="footer-actions">
+              <button className="why-btn" onClick={() => setShowExplanation(true)}>Xem giải thích</button>
+              <button className="continue-btn" onClick={handleNext}>Tiếp tục</button>
+            </div>
+          </div>
+        </footer>
       )}
 
-      <div className="actions">
-        <button className="ghost-button" onClick={resetQuestion} disabled={isLocked}>Reset</button>
-        <button className="primary-button" onClick={checkAnswer} disabled={isLocked || !isFilled || result?.kind === "correct"}>
-          {attempts === 0 ? "Check answer" : result?.locked ? "Answer shown" : "Check again"}
-        </button>
-      </div>
+      <ExplanationModal 
+        isOpen={showExplanation} 
+        onClose={() => setShowExplanation(false)} 
+        explanation={question.explanation} 
+        explanationMermaid={question.explanationMermaid}
+      />
     </main>
+    </PageTransition>
   );
 }
