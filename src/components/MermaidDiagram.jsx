@@ -13,7 +13,7 @@ mermaid.initialize({
     lineColor: '#3b82f6',
     secondaryColor: '#dcfce7',
     tertiaryColor: '#f1f5f9',
-    edgeLabelBackground: '#ffffff',
+    edgeLabelBackground: '#f1f5f9',
     noteBkgColor: '#fef9c3',
     noteTextColor: '#854d0e',
   }

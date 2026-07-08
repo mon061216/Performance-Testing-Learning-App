@@ -1,0 +1,314 @@
+Created At: 2026-07-08T11:17:10Z
+Completed At: 2026-07-08T11:17:22Z
+The following changes were made by the multi_replace_file_content tool to: d:\FPT\Semester 5\SWT\briliant\Performance-Testing-Learning-App\src\styles\styles.css. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -348,26 +348,221 @@
+   0%, 100% { transform: translateY(0); }
+   50% { transform: translateY(-5px); }
+ }
+-
+-.path-node {
+-  display: block;
+-  width: 72px;
+-  height: 60px;
+-  border: none;
+-  border-radius: 50%;
+-  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+-  color: #64748b;
+-  font-weight: 900;
+-  font-size: 1.3rem;
+-  cursor: pointer;
+-  box-shadow: 
+-    0 8px 0 #cbd5e1, 
+-    0 12px 15px rgba(0,0,0,0.1);
+-  transition: transform 0.2s, box-shadow 0.2s;
+-  position: relative;
+-  z-index: 2;
+-}
+-
++  flex-direction: column;
++  border: 1px solid #dbe8f3;
++  border-radius: 16px;
++  background: white;
++  overflow: hidden;
++  box-shadow: 0 8px 0 #cbd5e1, 0 15px 30px rgba(0,0,0,0.08);
++  cursor: pointer;
++  transition: transform 0.2s, box-shadow 0.2s;
++}
++
++.course-card:hover {
++  transform: translateY(-6px);
++  box-shadow: 0 12px 0 #cbd5e1, 0 30px 50px rgba(0,0,0,0.12);
++}
++
++.course-card-content {
++  padding: 24px;
++  flex: 1;
++}
++
++.course-card-content h2 {
++  margin: 0 0 8px;
++  color: var(--accent);
++}
++
++.course-card-content p {
++  margin: 0 0 16px;
++  color: #5f7187;
++  line-height: 1.5;
++}
++
++.course-card button {
++  border-radius: 0;
++  border: none;
++  border-top: 1px solid color-mix(in srgb, var(--accent) 80%, #495767);
++  box-shadow: none;
++}
++
++.path-view {
++  padding: 40px 20px;
++  background: radial-gradient(circle at top, #ffffff 0%, #f1f5f9 100%);
++  min-height: 100vh;
++}
++
++.path-layout-grid {
++  display: grid;
++  grid-template-columns: 320px 1fr;
++  gap: 60px;
++  max-width: 1100px;
++  width: 100%;
++  margin: 0 auto;
++  align-items: start;
++}
++
++.path-sidebar {
++  position: sticky;
++  top: 40px;
++  display: flex;
++  flex-direction: column;
++}
++
++.path-content {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  padding-bottom: 80px;
++}
++
++.level-header-pill {
++  background: white;
++  border: 2px solid #e2e8f0;
++  border-radius: 99px;
++  padding: 12px 30px;
++  display: inline-flex;
++  flex-direction: column;
++  align-items: center;
++  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
++  position: relative;
++  min-width: 300px;
++}
++
++.level-header-pill::after {
++  content: '';
++  position: absolute;
++  top: -2px; left: -2px; right: -2px; bottom: -2px;
++  border-radius: 99px;
++  background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
++  z-index: -1;
++  opacity: 0.25;
++  filter: blur(8px);
++}
++
++.path-header {
++  width: 100%;
++  display: flex;
++  align-items: center;
++  gap: 20px;
++  margin-bottom: 40px;
++}
++
++.path-heading span {
++  display: inline-flex;
++  padding: 5px 10px;
++  border-radius: 99px;
++  background: color-mix(in srgb, var(--accent) 16%, white);
++  color: color-mix(in srgb, var(--accent) 70%, #243447);
++  font-size: 0.78rem;
++  font-weight: 900;
++}
++
++.path-heading h2 {
++  margin: 14px 0 6px;
++  font-size: clamp(1.5rem, 2vw, 2.2rem);
++}
++
++.path-heading p {
++  margin: 0;
++  color: #62748a;
++  line-height: 1.5;
++}
++
++.winding-path {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 80px;
++  padding: 0 0 100px;
++}
++
++.path-node-wrapper {
++  position: relative;
++  display: grid;
++  place-items: center;
++}
++
++.popover-tooltip {
++  position: absolute;
++  top: -95px;
++  left: 36px;
++  transform: translateX(-50%);
++  background: #0f172a;
++  border-radius: 16px;
++  padding: 16px 20px;
++  color: white;
++  z-index: 20;
++  width: max-content;
++  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 12px;
++}
++
++.popover-tooltip::after {
++  content: '';
++  position: absolute;
++  bottom: -8px;
++  left: 50%;
++  transform: translateX(-50%);
++  border-left: 8px solid transparent;
++  border-right: 8px solid transparent;
++  border-top: 8px solid #0f172a;
++}
++
++.popover-tooltip h3 {
++  margin: 0;
++  font-size: 1rem;
++  font-weight: 700;
++  letter-spacing: 0.5px;
++}
++
++.popover-button {
++  background: var(--accent);
++  color: white;
++  border: none;
++  border-radius: 99px;
++  padding: 10px 30px;
++  font-weight: 800;
++  text-transform: uppercase;
++  letter-spacing: 1px;
++  font-size: 0.85rem;
++  box-shadow: 0 4px 0 color-mix(in srgb, var(--accent) 70%, #000);
++  cursor: pointer;
++  transition: transform 0.1s;
++  width: 100%;
++}
++.popover-button:active {
++  transform: translateY(4px);
++  box-shadow: 0 0 0 transparent;
++}
++
++@keyframes float {
++  0%, 100% { transform: translateY(0); }
++  50% { transform: translateY(-5px); }
++}
++
++.path-node {
++  display: block;
++  width: 72px;
++  height: 72px;
++  border: none;
++  border-radius: 50%;
++  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
++  color: #64748b;
++  font-weight: 900;
++  font-size: 1.3rem;
++  cursor: pointer;
++  box-shadow: 
++    0 8px 0 #cbd5e1, 
++    0 12px 15px rgba(0,0,0,0.1);
++  transition: transform 0.2s, box-shadow 0.2s;
++  position: relative;
++  z-index: 2;
++}
++
+ .path-node.current {
+   background: #3b82f6;
+   color: white;
+@@ -462,57 +462,14 @@
+   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* diamond shape */
+ }
+ 
+-/* Milestone Glowing Base & Rotating Rings */
+-.milestone-base {
+-  position: absolute;
+-  top: 50%;
+-  left: 50%;
+-  width: 100px;
+-  height: 100px;
+-  transform: translate(-50%, -50%);
+-  z-index: 1;
+-  pointer-events: none;
+-  opacity: 0.9;
+-}
+-.milestone-base .ring {
+-  position: absolute;
+-  border-radius: 50%;
+-  top: 50%;
+-  left: 50%;
+-  transform: translate(-50%, -50%);
+-}
+-.milestone-base .ring-core {
+-  width: 80px;
+-  height: 80px;
+-  background: transparent;
+-  box-shadow: 0 0 30px 10px currentColor;
+-}
+-.milestone-base .ring-inner {
+-  width: 96px;
+-  height: 96px;
+-  border: 4px dashed currentColor;
+-  opacity: 0.8;
+-  animation: ring-spin 8s linear infinite;
+-}
+-.milestone-base .ring-outer {
+-  width: 112px;
+-  height: 112px;
+-  border: 2px solid currentColor;
+-  opacity: 0.5;
+-  border-right-color: transparent;
+-  border-bottom-color: transparent;
+-  animation: ring-spin-reverse 6s linear infinite;
+-}
+ @keyframes ring-spin {
+-  100% { transform: translate(-50%, -50%) rotate(360deg); }
++  0% { transform: rotate(0deg); }
++  100% { transform: rotate(360deg); }
+ }
+ @keyframes ring-spin-reverse {
+-  100% { transform: translate(-50%, -50%) rotate(-360deg); }
+-}
+-.milestone-base.current { color: #3b82f6; }
+-.milestone-base.done { color: #fbbf24; }
+-.milestone-base.locked { color: #94a3b8; opacity: 0; }
+-.milestone-base.locked .ring-inner, .milestone-base.locked .ring-outer { animation: none; }
++  0% { transform: rotate(0deg); }
++  100% { transform: rotate(-360deg); }
++}
+ 
+ 
+ .path-node.done {
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.
+
+We did our best to apply changes despite some inaccuracies. Double check if the edit applied is what you intended.

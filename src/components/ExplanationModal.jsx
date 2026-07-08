@@ -4,19 +4,25 @@ import { motion, AnimatePresence } from "motion/react";
 import { MermaidDiagram } from "./MermaidDiagram";
 
 export function ExplanationModal({ isOpen, onClose, explanation, explanationMermaid }) {
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
-      <div className="modal-overlay" onClick={onClose}>
+      {isOpen && (
         <motion.div 
-          className="modal-content"
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="modal-overlay" 
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={(e) => e.stopPropagation()}
         >
+          <motion.div 
+            className="modal-content"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2, delay: 0.05 }}
+            onClick={(e) => e.stopPropagation()}
+          >
           <header className="modal-header">
             <h2>Giải thích chi tiết</h2>
             <button className="close-btn" onClick={onClose}>&times;</button>
@@ -36,8 +42,9 @@ export function ExplanationModal({ isOpen, onClose, explanation, explanationMerm
               <span className="dot active"></span>
             </div>
           </footer>
+          </motion.div>
         </motion.div>
-      </div>
+      )}
     </AnimatePresence>
   );
 }

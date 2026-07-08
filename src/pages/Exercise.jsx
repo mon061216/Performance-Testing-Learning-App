@@ -5,9 +5,10 @@ import { ShapeIcon } from "../components/ShapeIcon";
 import { LockoutPanel } from "./LockoutPanel";
 import { MermaidDiagram } from "../components/MermaidDiagram";
 import ReactMarkdown from "react-markdown";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { ExplanationModal } from "../components/ExplanationModal";
 import { PageTransition } from "../components/PageTransition";
+import { InteractiveDiagram } from "../components/InteractiveDiagram";
 
 export function Exercise() {
   const { courseId, lessonIndex: lessonIndexStr } = useParams();
@@ -23,7 +24,8 @@ export function Exercise() {
   } = useOutletContext();
 
   const course = courses.find((c) => c.id === courseId);
-  const lesson = course?.lessons?.[lessonIndex];
+  const allLessons = course?.levels ? course.levels.flatMap(l => l.lessons) : course?.lessons;
+  const lesson = allLessons?.[lessonIndex];
   
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const question = lesson?.questions?.[currentQuestionIndex];
@@ -128,53 +130,77 @@ export function Exercise() {
         </div>
       </div>
 
+      <LayoutGroup>
       <div className="exercise-content">
         <div className="prompt-header">
-          <h2>{question.prompt}</h2>
           <div className="markdown-theory">
             <ReactMarkdown>{question.theory || ""}</ReactMarkdown>
           </div>
         </div>
 
+        {question.theoryMermaid && (
+          <div className="theory-visual">
+            <MermaidDiagram chart={question.theoryMermaid} />
+          </div>
+        )}
+
+        <div className="exercise-instruction">
+          <div className="instruction-icon">🎯</div>
+          <div className="instruction-text">
+            <h3>Nhiệm vụ của bạn</h3>
+            <h2>{question.prompt}</h2>
+            <p>{question.description}</p>
+            <p className="hint-text">💡 Kéo thả các thẻ bên dưới vào ô trống tương ứng.</p>
+          </div>
+        </div>
+
         <div className="interactive-widget">
-          {question.theoryMermaid && (
-            <div className="widget-visual">
-              <MermaidDiagram chart={question.theoryMermaid} />
+          {question.interactiveDiagram ? (
+            <InteractiveDiagram 
+              diagram={question.interactiveDiagram}
+              placements={placements}
+              question={question}
+              result={result}
+              draggedId={draggedId}
+              dropCard={dropCard}
+              removeCard={removeCard}
+            />
+          ) : (
+            <div className="widget-slots">
+              {question.slots.map((slot, index) => {
+                const card = placements[index] ? findCard(placements[index]) : null;
+                const isCorrect = result?.locked && placements[index] === question.answer[index];
+                const isWrong = result?.kind === 'try' && placements[index] !== question.answer[index] && placements[index];
+
+                return (
+                  <div key={`${slot}-${index}`} className="slot-wrapper">
+                    <div className="slot-label">{slot}</div>
+                    <div
+                      className={`widget-slot ${card ? "filled" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={() => draggedId && dropCard(index, draggedId)}
+                    >
+                      <span className="slot-number">{index + 1}</span>
+                      <div className="slot-content">
+                        {card ? (
+                          <motion.button 
+                            layoutId={`card-${card.id}`}
+                            className={`shape-card placed ${card.type}`} 
+                            onClick={() => removeCard(index)}
+                          >
+                            <ShapeIcon type={card.type} />
+                            <span>{card.label}</span>
+                          </motion.button>
+                        ) : (
+                          <span className="slot-placeholder">Kéo thả vào đây...</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
-          
-          <div className="widget-slots">
-            {question.slots.map((slot, index) => {
-              const card = placements[index] ? findCard(placements[index]) : null;
-              const isCorrect = result?.locked && placements[index] === question.answer[index];
-              const isWrong = result?.kind === 'try' && placements[index] !== question.answer[index] && placements[index];
-
-              return (
-                <div
-                  key={`${slot}-${index}`}
-                  className={`widget-slot ${card ? "filled" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
-                  onDragOver={(event) => event.preventDefault()}
-                  onDrop={() => draggedId && dropCard(index, draggedId)}
-                >
-                  <span className="slot-number">{index + 1}</span>
-                  <div className="slot-content">
-                    {card ? (
-                      <motion.button 
-                        layoutId={`card-${card.id}`}
-                        className={`shape-card placed ${card.type}`} 
-                        onClick={() => removeCard(index)}
-                      >
-                        <ShapeIcon type={card.type} />
-                        <span>{card.label}</span>
-                      </motion.button>
-                    ) : (
-                      <span className="slot-placeholder"></span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
 
         <div className="available-cards-container">
@@ -211,11 +237,12 @@ export function Exercise() {
                 onClick={checkAnswer}
                 disabled={!isFilled}
               >
-                &#9654; Run
+                &#9654; Kiểm tra
               </button>
            </div>
         )}
       </div>
+      </LayoutGroup>
 
       {result && (
         <footer className={`exercise-footer ${result.kind}`}>

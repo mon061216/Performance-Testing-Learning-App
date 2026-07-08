@@ -26,14 +26,14 @@ export function HomeView() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            Trở thành Performance Engineer!
+            Trở thành Bậc thầy Statechart!
           </motion.h1>
           <motion.p
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Học bản chất của Performance Testing thông qua các chỉ số, loại hình ép tải và phân tích cổ chai hệ thống.
+            Làm chủ nghệ thuật thiết kế hệ thống phản ứng thông qua Biểu đồ trạng thái UML với các bài tập kéo thả trực quan và sinh động.
           </motion.p>
         </div>
         <div className="floating-shape shape-1"></div>
@@ -42,8 +42,9 @@ export function HomeView() {
       </div>
       <div className="course-cards">
         {courses.map((course, index) => {
+          const allLessons = course.levels ? course.levels.flatMap(l => l.lessons) : course.lessons;
           const done = completed[course.id] || 0;
-          const total = course.lessons.length;
+          const total = allLessons.length;
           const progress = Math.round((done / total) * 100);
           return (
             <motion.div 
