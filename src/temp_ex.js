@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
+﻿import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router";
 import { courses } from "../data/courses";
 import { ShapeIcon } from "../components/ShapeIcon";
-import { MilestoneComplete } from "../components/MilestoneComplete";
+import { LockoutPanel } from "./LockoutPanel";
 import { MermaidDiagram } from "../components/MermaidDiagram";
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
@@ -15,7 +15,13 @@ export function Exercise() {
   const navigate = useNavigate();
   const lessonIndex = parseInt(lessonIndexStr, 10);
 
-  const { xp, handleCompleteExercise } = useOutletContext();
+  const {
+    lives,
+    isLocked,
+    restockText,
+    handleCompleteExercise,
+    handleFailExercise
+  } = useOutletContext();
 
   const course = courses.find((c) => c.id === courseId);
   const allLessons = course?.levels ? course.levels.flatMap(l => l.lessons) : course?.lessons;
@@ -29,9 +35,6 @@ export function Exercise() {
   const [result, setResult] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [showMilestoneComplete, setShowMilestoneComplete] = useState(false);
-  const [milestoneData, setMilestoneData] = useState(null);
-  const [hasFailed, setHasFailed] = useState(false);
 
   // Re-initialize state when route changes or question index changes
   useEffect(() => {
@@ -64,10 +67,16 @@ export function Exercise() {
     );
   }
 
-
+  if (isLocked) {
+    return (
+      <PageTransition>
+        <LockoutPanel restockText={restockText} onBack={() => navigate(`/course/${course.id}`)} />
+      </PageTransition>
+    );
+  }
 
   const dropCard = (slotIndex, cardId) => {
-    if (result?.locked) return;
+    if (isLocked || result?.locked) return;
     setPlacements((current) => {
       const next = current.map((id) => (id === cardId ? null : id));
       next[slotIndex] = cardId;
@@ -76,54 +85,39 @@ export function Exercise() {
   };
 
   const removeCard = (slotIndex) => {
-    if (result?.locked) return;
+    if (isLocked || result?.locked) return;
     setPlacements((current) => current.map((id, index) => (index === slotIndex ? null : id)));
   };
 
   const checkAnswer = () => {
-    
+    if (isLocked) return;
     const correct = placements.every((id, index) => id === question.answer[index]);
     if (correct) {
-      setResult({ kind: "correct", locked: true, title: "Correct!" });
+      setResult({ kind: "correct", locked: true, title: "ChÃ­nh xÃ¡c!" });
       return;
     }
 
     // Immediately fail, no retry
-    setHasFailed(true);
-    setResult({ kind: "answer", locked: true, title: "Incorrect!" });
+    setResult({ kind: "answer", locked: true, title: "ChÆ°a chÃ­nh xÃ¡c!" });
     setPlacements(question.answer); // Show them the correct answer
+    handleFailExercise();
   };
 
   const handleNext = () => {
+    // Check if lives reached 0, if so, redirect immediately (handled by handleFailExercise or LockoutPanel)
+    // But since handleFailExercise just sets lives, the parent might already switch to LockoutPanel.
+    // If not locked out, we can move to the next question or complete.
+    
     if (currentQuestionIndex < lesson.questions.length - 1) {
       setCurrentQuestionIndex((i) => i + 1);
-      setResult(null);
-      setPlacements(Array(question?.answer?.length || 0).fill(null));
-      setDraggedId(null);
     } else {
-      const isFailure = hasFailed || result?.kind === "answer";
-      const data = handleCompleteExercise(course.id, lessonIndex, isFailure ? 0 : 25);
-      setMilestoneData(data);
-      setShowMilestoneComplete(true);
+      // Cho phÃ©p qua bÃ i luÃ´n dÃ¹ lÃ m sai, vÃ¬ ngÆ°á»i dÃ¹ng Ä‘Ã£ xem giáº£i thÃ­ch
+      handleCompleteExercise(course.id, lessonIndex);
+      navigate(`/course/${course.id}`);
     }
   };
 
-  const handleMilestoneContinue = () => {
-    navigate(`/course/${course.id}`);
-  };
-
   const findCard = (id) => question.cards.find((card) => card.id === id);
-
-  if (showMilestoneComplete && milestoneData) {
-    return (
-      <MilestoneComplete 
-        xp={milestoneData.newXp} 
-        streak={milestoneData.newStreak}
-        streakIncreased={milestoneData.streakIncreased}
-        onContinue={handleMilestoneContinue} 
-      />
-    );
-  }
 
   return (
     <PageTransition>
@@ -139,11 +133,9 @@ export function Exercise() {
       <LayoutGroup>
       <div className="exercise-content">
         <div className="prompt-header">
-          {currentQuestionIndex === 0 && (
-            <div className="markdown-theory">
-              <ReactMarkdown>{question.theory || ""}</ReactMarkdown>
-            </div>
-          )}
+          <div className="markdown-theory">
+            <ReactMarkdown>{question.theory || ""}</ReactMarkdown>
+          </div>
         </div>
 
         {question.theoryMermaid && (
@@ -153,12 +145,12 @@ export function Exercise() {
         )}
 
         <div className="exercise-instruction">
-          <div className="instruction-icon">🎯</div>
+          <div className="instruction-icon">ðŸŽ¯</div>
           <div className="instruction-text">
-            {currentQuestionIndex === 0 && <h3>Your task</h3>}
+            <h3>Nhiá»‡m vá»¥ cá»§a báº¡n</h3>
             <h2>{question.prompt}</h2>
-            {currentQuestionIndex === 0 && <p>{question.description}</p>}
-            <p className="hint-text">💡 Drag and drop the cards below into the corresponding slots.</p>
+            <p>{question.description}</p>
+            <p className="hint-text">ðŸ’¡ KÃ©o tháº£ cÃ¡c tháº» bÃªn dÆ°á»›i vÃ o Ã´ trá»‘ng tÆ°Æ¡ng á»©ng.</p>
           </div>
         </div>
 
@@ -200,7 +192,7 @@ export function Exercise() {
                             <span>{card.label}</span>
                           </motion.button>
                         ) : (
-                          <span className="slot-placeholder">Drop here...</span>
+                          <span className="slot-placeholder">KÃ©o tháº£ vÃ o Ä‘Ã¢y...</span>
                         )}
                       </div>
                     </div>
@@ -221,7 +213,7 @@ export function Exercise() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  draggable={!result?.locked}
+                  draggable={!isLocked && !result?.locked}
                   className={`shape-card ${card.type}`}
                   onDragStart={() => setDraggedId(card.id)}
                   onDragEnd={() => setDraggedId(null)}
@@ -245,7 +237,7 @@ export function Exercise() {
                 onClick={checkAnswer}
                 disabled={!isFilled}
               >
-                &#9654; Check
+                &#9654; Kiá»ƒm tra
               </button>
            </div>
         )}
@@ -259,8 +251,8 @@ export function Exercise() {
               <h3>{result.title}</h3>
             </div>
             <div className="footer-actions">
-              <button className="why-btn" onClick={() => setShowExplanation(true)}>Show explanation</button>
-              <button className="continue-btn" onClick={handleNext}>Continue</button>
+              <button className="why-btn" onClick={() => setShowExplanation(true)}>Xem giáº£i thÃ­ch</button>
+              <button className="continue-btn" onClick={handleNext}>Tiáº¿p tá»¥c</button>
             </div>
           </div>
         </footer>
@@ -276,3 +268,4 @@ export function Exercise() {
     </PageTransition>
   );
 }
+

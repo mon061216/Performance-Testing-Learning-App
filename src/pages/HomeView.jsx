@@ -26,14 +26,14 @@ export function HomeView() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            Trở thành Bậc thầy Statechart!
+            Become a Statechart Master!
           </motion.h1>
           <motion.p
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Làm chủ nghệ thuật thiết kế hệ thống phản ứng thông qua Biểu đồ trạng thái UML với các bài tập kéo thả trực quan và sinh động.
+            Master the art of reactive system design through UML Statecharts with visual and interactive drag-and-drop exercises.
           </motion.p>
         </div>
         <div className="floating-shape shape-1"></div>
@@ -63,13 +63,13 @@ export function HomeView() {
                 <div className="progress-track">
                   <span style={{ width: `${progress}%` }} />
                 </div>
-                <small>{done} / {total} bài học</small>
+                <small>{done} / {total} lessons</small>
               </div>
               <button className="primary-button" onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/course/${course.id}`);
               }}>
-                {done === 0 ? "Bắt đầu" : done >= total ? "Ôn tập" : "Tiếp tục"}
+                {done === 0 ? "Start" : done >= total ? "Review" : "Continue"}
               </button>
             </motion.div>
           );

@@ -65,7 +65,7 @@ export function PathView() {
             <div className="winding-path">
               {(() => {
                 let globalIndex = 0;
-                return (course.levels || [{ title: "Khóa học", lessons: course.lessons }]).map((level, levelIdx) => (
+                return (course.levels || [{ title: "Course", lessons: course.lessons }]).map((level, levelIdx) => (
                   <React.Fragment key={levelIdx}>
                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       <div className="level-header-pill">
@@ -86,7 +86,7 @@ export function PathView() {
                             {isCurrent && clickedLessonIndex === null && (
                               <>
                                 {selectedNodeIndex !== index && (
-                                  <div className="mascot-speech-bubble">Sẵn sàng học chưa?</div>
+                                  <div className="mascot-speech-bubble">Ready to learn?</div>
                                 )}
                                 <motion.img
                                   src="/mascot.png"
@@ -123,7 +123,7 @@ export function PathView() {
                               >
                                 <h3>{lesson.title}</h3>
                                 <button className="popover-button" onClick={() => handleStartLesson(index)}>
-                                  Bắt đầu
+                                  Start
                                 </button>
                               </motion.div>
                             )}

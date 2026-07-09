@@ -24,7 +24,7 @@ export function ExplanationModal({ isOpen, onClose, explanation, explanationMerm
             onClick={(e) => e.stopPropagation()}
           >
           <header className="modal-header">
-            <h2>Giải thích chi tiết</h2>
+            <h2>Detailed Explanation</h2>
             <button className="close-btn" onClick={onClose}>&times;</button>
           </header>
           

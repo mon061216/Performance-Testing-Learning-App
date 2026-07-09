@@ -1,56 +1,67 @@
-import React, { useState, useEffect } from "react";
-import { Outlet, useLocation, useOutlet } from "react-router";
+import React, { useState } from "react";
+import { useLocation, useOutlet } from "react-router";
 import { AnimatePresence } from "motion/react";
-import { PageTransition } from "../components/PageTransition";
-import { MAX_LIVES, RESTOCK_MS } from "../data/courses";
-import { useTimer, formatTimeLeft } from "../hooks/useTimer";
 import { StatBar } from "../components/StatBar";
 
 export default function App() {
-  const [lives, setLives] = useState(MAX_LIVES);
-  const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(1);
-  const [completed, setCompleted] = useState({});
-  const [lockUntil, setLockUntil] = useState(null);
-  const now = useTimer();
+  const [xp, setXp] = useState(() => parseInt(localStorage.getItem('app_xp_v3') || '0', 10));
+  const [streak, setStreak] = useState(() => parseInt(localStorage.getItem('app_streak_v3') || '0', 10));
+  const [lastDate, setLastDate] = useState(() => localStorage.getItem('app_lastDate_v3') || '');
+  const [completed, setCompleted] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('app_completed_v3')) || {};
+    } catch {
+      return {};
+    }
+  });
   const location = useLocation();
 
-  const isLocked = lives <= 0 && lockUntil && now < lockUntil;
-  const restockText = isLocked ? formatTimeLeft(lockUntil - now) : "0m 00s";
+  const handleCompleteExercise = (courseId, lessonIndex, xpAmount = 25) => {
+    let streakIncreased = false;
+    let newStreak = streak;
 
-  useEffect(() => {
-    if (lockUntil && now >= lockUntil) {
-      setLives(MAX_LIVES);
-      setLockUntil(null);
+    const today = new Date().toDateString();
+    if (today !== lastDate) {
+      streakIncreased = true;
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      if (lastDate === yesterday.toDateString()) {
+        newStreak = streak + 1;
+      } else {
+        newStreak = 1;
+      }
+      
+      setStreak(newStreak);
+      setLastDate(today);
+      localStorage.setItem('app_streak_v3', newStreak);
+      localStorage.setItem('app_lastDate_v3', today);
     }
-  }, [lockUntil, now]);
 
-  const handleCompleteExercise = (courseId, lessonIndex) => {
-    setXp((v) => v + 25);
-    setStreak((v) => v + 1);
-    setCompleted((current) => ({
-      ...current,
-      [courseId]: Math.max(current[courseId] || 0, lessonIndex + 1),
-    }));
-  };
+    const newXp = xp + xpAmount;
+    setXp(newXp);
+    localStorage.setItem('app_xp_v3', newXp);
 
-  const handleFailExercise = () => {
-    setLives((value) => {
-      const nextLives = Math.max(0, value - 1);
-      if (nextLives === 0) setLockUntil(Date.now() + RESTOCK_MS);
-      return nextLives;
+    setCompleted((current) => {
+      const newCompleted = {
+        ...current,
+        [courseId]: Math.max(current[courseId] || 0, lessonIndex + 1),
+      };
+      localStorage.setItem('app_completed_v3', JSON.stringify(newCompleted));
+      return newCompleted;
     });
+
+    return { streakIncreased, newStreak, newXp, gainedXp: xpAmount };
   };
 
   const element = useOutlet({
-    lives, setLives, xp, setXp, streak, setStreak,
-    completed, setCompleted, lockUntil, setLockUntil,
-    isLocked, restockText, handleCompleteExercise, handleFailExercise
+    xp, setXp, streak, setStreak,
+    completed, setCompleted, handleCompleteExercise
   });
 
   return (
     <div className="app-shell">
-      <StatBar lives={lives} xp={xp} streak={streak} isLocked={isLocked} restockText={restockText} />
+      <StatBar xp={xp} streak={streak} />
       <div className="app-grid-full" style={{ overflowX: 'hidden' }}>
         <AnimatePresence mode="wait">
           {element && React.cloneElement(element, { key: location.pathname })}
