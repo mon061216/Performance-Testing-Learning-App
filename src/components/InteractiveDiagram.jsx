@@ -37,7 +37,7 @@ export function InteractiveDiagram({
             <span>{card.label}</span>
           </motion.button>
         ) : (
-          <span className="slot-placeholder">Kéo thả...</span>
+          <span className="slot-placeholder">Drag and drop...</span>
         )}
       </div>
     );
@@ -49,7 +49,7 @@ export function InteractiveDiagram({
     if (node.type === 'initial') {
       return (
         <div key={idx} className="diagram-node initial-state-container">
-          <div className="initial-state"></div>
+          <div className="initial-state-marker"></div>
           {node.label && <span className="node-label">{node.label}</span>}
         </div>
       );
@@ -57,7 +57,7 @@ export function InteractiveDiagram({
     if (node.type === 'final') {
       return (
         <div key={idx} className="diagram-node final-state-container">
-          <div className="final-state"></div>
+          <div className="final-state-marker"></div>
           {node.label && <span className="node-label">{node.label}</span>}
         </div>
       );

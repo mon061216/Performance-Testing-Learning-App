@@ -495,7 +495,7 @@ button {
   position: absolute;
   top: calc(50% + 8px);
   left: 50%;
-  width: 100px;
+  width: 96px;
   height: 100px;
   transform: translate(-50%, -50%) rotateX(33.5deg);
   transform-style: preserve-3d;
@@ -1690,10 +1690,12 @@ button {
   }
 }
 
-.mermaid-container svg node rect,
-.mermaid-container svg node circle,
-.mermaid-container svg node polygon {
+.mermaid-container svg .node rect,
+.mermaid-container svg .node circle,
+.mermaid-container svg .node polygon {
   transition: all 0.3s ease;
+  rx: 0 !important;
+  ry: 0 !important;
 }
 
 .mermaid-container svg node:hover rect,
@@ -1828,14 +1830,14 @@ button {
   gap: 8px;
 }
 
-.diagram-node .initial-state {
+.diagram-node .initial-state-marker {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   background: #334155;
 }
 
-.diagram-node .final-state {
+.diagram-node .final-state-marker {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -2047,14 +2049,14 @@ button {
   gap: 8px;
 }
 
-.diagram-node .initial-state {
+.diagram-node .initial-state-marker {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   background: #334155;
 }
 
-.diagram-node .final-state {
+.diagram-node .final-state-marker {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -2451,4 +2453,74 @@ button {
   border: none;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+
+/* New state icons */
+.shape-icon.initial-state-icon {
+  font-size: 2.5rem;
+  color: #1e293b;
+  border: none;
+  background: transparent;
+  width: auto;
+  height: auto;
+  line-height: 1;
+}
+.shape-icon.final-state-icon {
+  font-size: 2.5rem;
+  color: #1e293b;
+  border: none;
+  background: transparent;
+  width: auto;
+  height: auto;
+  line-height: 1;
+}
+
+.shape-card.initial-state, .shape-card.final-state {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  gap: 0;
+}
+.shape-card.initial-state span:not(.shape-icon), .shape-card.final-state span:not(.shape-icon) {
+  display: none;
+}
+
+
+/* Fix slot shapes for state points */
+.diagram-slot.initial-state, .diagram-slot.final-state {
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+  min-height: 60px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.diagram-slot.initial-state .slot-placeholder, .diagram-slot.final-state .slot-placeholder {
+  display: none;
+}
+
+
+/* Checkpoint styling */
+.path-node.checkpoint {
+  width: 90px;
+  height: 75px;
+  border-radius: 50%;
+  box-shadow: 0 10px 0 #cbd5e1, 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+.path-node.checkpoint.current {
+  box-shadow: 0 10px 0 color-mix(in srgb, var(--accent) 70%, #000), 0 15px 30px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.path-node.checkpoint.done {
+  box-shadow: 0 10px 0 #d9a000, 0 15px 25px rgba(255, 200, 0, 0.3);
+}
+.checkpoint-base {
+  transform: translate(-50%, -50%) rotateX(33.5deg) scale(1.25);
 }

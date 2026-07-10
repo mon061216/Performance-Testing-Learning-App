@@ -81,7 +81,7 @@ export function PathView() {
                       const offset = Math.sin(index * 1.2) * 50 - 70;
                       return (
                         <div key={lesson.id} className="path-node-wrapper" style={{ transform: `translateX(${offset}px)` }}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: '72px', height: '60px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: lesson.badge === "Checkpoint" ? '90px' : '72px', height: lesson.badge === "Checkpoint" ? '75px' : '60px' }}>
 
                             {isCurrent && clickedLessonIndex === null && (
                               <>
@@ -128,13 +128,13 @@ export function PathView() {
                               </motion.div>
                             )}
 
-                            <div className={`milestone-base ${isCurrent ? "current" : isDone ? "done" : "locked"}`}>
+                            <div className={`milestone-base ${isCurrent ? "current" : isDone ? "done" : "locked"} ${lesson.badge === "Checkpoint" ? "checkpoint-base" : ""}`}>
                               <div className="ring ring-outer"></div>
                               <div className="ring ring-inner"></div>
                               <div className="ring ring-core"></div>
                             </div>
                             <button
-                              className={`path-node ${isCurrent ? "current" : ""} ${isDone ? "done" : ""} ${isLockedNode ? "locked" : ""} ${selectedNodeIndex === index ? "selected" : ""}`}
+                              className={`path-node ${isCurrent ? "current" : ""} ${isDone ? "done" : ""} ${isLockedNode ? "locked" : ""} ${selectedNodeIndex === index ? "selected" : ""} ${lesson.badge === "Checkpoint" ? "checkpoint" : ""}`}
                               onClick={() => handleNodeClick(index, isLockedNode)}
                               disabled={isLockedNode || isLocked || clickedLessonIndex !== null}
                               title={lesson.title}

@@ -52,7 +52,7 @@ export function PageTransition({ children, className }) {
             animate={{ y: [0, -20, 0] }}
             transition={{ repeat: Infinity, duration: 0.6 }}
           />
-          <h3>Đang tải bài học...</h3>
+          <h3>Loading lesson...</h3>
         </motion.div>
       ) : (
         <motion.div

@@ -80,18 +80,26 @@ export function Exercise() {
     setPlacements((current) => current.map((id, index) => (index === slotIndex ? null : id)));
   };
 
+  const retry = () => {
+    setResult(null);
+    setPlacements(Array(question.answer.length).fill(null));
+  };
+
+  const showAnswer = () => {
+    setHasFailed(true);
+    setResult({ kind: "answer", locked: true, title: "Incorrect!" });
+    setPlacements(question.answer);
+  };
+
   const checkAnswer = () => {
-    
     const correct = placements.every((id, index) => id === question.answer[index]);
     if (correct) {
       setResult({ kind: "correct", locked: true, title: "Correct!" });
       return;
     }
 
-    // Immediately fail, no retry
-    setHasFailed(true);
-    setResult({ kind: "answer", locked: true, title: "Incorrect!" });
-    setPlacements(question.answer); // Show them the correct answer
+    // Fail, but allow retry
+    setResult({ kind: "try", locked: false, title: "Incorrect!" });
   };
 
   const handleNext = () => {
@@ -259,8 +267,16 @@ export function Exercise() {
               <h3>{result.title}</h3>
             </div>
             <div className="footer-actions">
-              <button className="why-btn" onClick={() => setShowExplanation(true)}>Show explanation</button>
-              <button className="continue-btn" onClick={handleNext}>Continue</button>
+              {result.kind === 'try' ? (
+                <button className="why-btn" onClick={showAnswer}>Show answer</button>
+              ) : (
+                <button className="why-btn" onClick={() => setShowExplanation(true)}>Show explanation</button>
+              )}
+              {result.kind === 'try' ? (
+                <button className="continue-btn" onClick={retry}>Try again</button>
+              ) : (
+                <button className="continue-btn" onClick={handleNext}>Continue</button>
+              )}
             </div>
           </div>
         </footer>
