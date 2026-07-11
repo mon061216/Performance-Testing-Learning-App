@@ -68,6 +68,7 @@ export function Exercise() {
 
   const dropCard = (slotIndex, cardId) => {
     if (result?.locked) return;
+    if (result?.kind === 'try') setResult(null);
     setPlacements((current) => {
       const next = current.map((id) => (id === cardId ? null : id));
       next[slotIndex] = cardId;
@@ -77,6 +78,7 @@ export function Exercise() {
 
   const removeCard = (slotIndex) => {
     if (result?.locked) return;
+    if (result?.kind === 'try') setResult(null);
     setPlacements((current) => current.map((id, index) => (index === slotIndex ? null : id)));
   };
 
@@ -264,6 +266,12 @@ export function Exercise() {
         <footer className={`exercise-footer ${result.kind}`}>
           <div className="footer-content">
             <div className="feedback-message">
+              {result.kind === 'correct' && (
+                 <img src="/mascot_cheering.png" alt="Cheering Mascot" className="feedback-mascot" />
+              )}
+              {(result.kind === 'try' || result.kind === 'answer') && (
+                 <img src="/mascot_encouraging.png" alt="Encouraging Mascot" className="feedback-mascot" />
+              )}
               <h3>{result.title}</h3>
             </div>
             <div className="footer-actions">

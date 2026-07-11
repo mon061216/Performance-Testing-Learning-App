@@ -134,7 +134,7 @@ button {
 }
 
 .home-view {
-  background: radial-gradient(circle at top right, #f8fafc 0%, #e2e8f0 100%);
+  background: transparent;
   min-height: 100vh;
   border-radius: 12px;
 }
@@ -193,7 +193,7 @@ button {
 
 .path-view {
   padding: 40px 20px;
-  background: radial-gradient(circle at top, #ffffff 0%, #f1f5f9 100%);
+  background: transparent;
   min-height: 100vh;
 }
 
@@ -1531,6 +1531,11 @@ button {
   align-items: center;
 }
 
+.feedback-message {
+  display: flex;
+  align-items: center;
+}
+
 .feedback-message h3 {
   font-size: 1.5rem;
   font-weight: 800;
@@ -2288,6 +2293,7 @@ button {
   height: auto;
   z-index: 10;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .mascot-jumping {
@@ -2298,6 +2304,7 @@ button {
   height: auto;
   z-index: 11;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .mascot-speech-bubble {
@@ -2524,3 +2531,15 @@ button {
 .checkpoint-base {
   transform: translate(-50%, -50%) rotateX(33.5deg) scale(1.25);
 }
+
+.home-mascot, .milestone-mascot, .mascot-loading {
+  mix-blend-mode: multiply;
+}
+
+.feedback-mascot {
+  width: 80px;
+  height: auto;
+  margin-right: 15px;
+  animation: float 3s infinite ease-in-out;
+}
+

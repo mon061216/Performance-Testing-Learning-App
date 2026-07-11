@@ -1,34 +1,62 @@
 const Jimp = require('jimp');
 
-async function removeBackground() {
-  try {
-    const image = await Jimp.read('public/cat_mascot.png');
-    // Get the color of the top-left pixel to use as the background color
-    const bgColor = image.getPixelColor(0, 0);
-    const { r: bgR, g: bgG, b: bgB } = Jimp.intToRGBA(bgColor);
-    
-    // Tolerance for background color matching
-    const tolerance = 25; 
+async function removeBackground(imagePath) {
+    const image = await Jimp.read(imagePath);
+    const width = image.bitmap.width;
+    const height = image.bitmap.height;
 
-    image.scan(0, 0, image.bitmap.width, image.bitmap.height, function (x, y, idx) {
-      const r = this.bitmap.data[idx + 0];
-      const g = this.bitmap.data[idx + 1];
-      const b = this.bitmap.data[idx + 2];
-      
-      const diffR = Math.abs(r - bgR);
-      const diffG = Math.abs(g - bgG);
-      const diffB = Math.abs(b - bgB);
-      
-      if (diffR < tolerance && diffG < tolerance && diffB < tolerance) {
-        this.bitmap.data[idx + 3] = 0; // Set alpha to 0 (transparent)
-      }
-    });
+    // Use a queue for flood fill
+    const queue = [[0, 0]];
+    const visited = new Set();
+    const targetColor = image.getPixelColor(0, 0);
 
-    await image.writeAsync('public/cat_mascot_transparent.png');
-    console.log('Background removed successfully');
-  } catch (err) {
-    console.error('Error removing background:', err);
-  }
+    // We assume the top-left pixel is the background color (white)
+    // We will set alpha to 0 for all contiguous pixels matching targetColor
+    const transparentColor = 0x00000000;
+
+    while (queue.length > 0) {
+        const [x, y] = queue.pop();
+        const key = `${x},${y}`;
+
+        if (visited.has(key)) continue;
+        visited.add(key);
+
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+        const currentColor = image.getPixelColor(x, y);
+
+        // Calculate color difference to allow slight anti-aliasing (tolerance)
+        const r1 = (currentColor >> 24) & 255;
+        const g1 = (currentColor >> 16) & 255;
+        const b1 = (currentColor >> 8) & 255;
+
+        const r2 = (targetColor >> 24) & 255;
+        const g2 = (targetColor >> 16) & 255;
+        const b2 = (targetColor >> 8) & 255;
+
+        const diff = Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
+
+        if (diff < 15) { // Tolerance
+            image.setPixelColor(transparentColor, x, y);
+            queue.push([x + 1, y]);
+            queue.push([x - 1, y]);
+            queue.push([x, y + 1]);
+            queue.push([x, y - 1]);
+        }
+    }
+
+    await image.writeAsync(imagePath);
+    console.log(`Removed background for ${imagePath}`);
 }
 
-removeBackground();
+async function main() {
+    try {
+        await removeBackground('public/mascot_cheering.png');
+        await removeBackground('public/mascot_encouraging.png');
+        await removeBackground('public/mascot_sleepy.png');
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+main();

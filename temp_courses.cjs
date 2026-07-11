@@ -1,4 +1,4 @@
-export const courses = [
+module.exports.courses = [
   {
     "id": "statechart-uml",
     "title": "UML Statecharts",
@@ -10,13 +10,13 @@ export const courses = [
         "lessons": [
           {
             "id": "l1-m1",
-            "title": "Introduction to Statecharts",
-            "badge": "Checkpoint",
+            "title": "Introduction & State Changes",
+            "badge": "Lesson 1",
             "questions": [
               {
                 "prompt": "What does a Statechart model?",
-                "theory": "### What is a Statechart?\n\nA Statechart is a diagram used to model the **dynamic behavior** of a single object (or a system) over time.\n\n- It describes the various **states** an object can be in.\n- It shows how the object transitions from one state to another in response to **events**.\n- It is heavily used in designing reactive systems like UI components, games, embedded systems, etc.",
-                "theoryMermaid": "stateDiagram-v2\n  [*] --> Idle\n  Idle --> Processing : Receive Task\n  Processing --> Idle : Task Completed\n  Processing --> Error : Task Failed\n  Error --> Idle : Reset",
+                "theory": "\n### What is a Statechart?\n\nA Statechart is a diagram used to model the **dynamic behavior** of a single object (or a system) over time.\n\n- It describes the various **states** an object can be in.\n- It shows how the object transitions from one state to another in response to **events**.\n- It is heavily used in designing reactive systems like UI components, games, embedded systems, etc.\n                ",
+                "theoryMermaid": "stateDiagram-v2\n                  [*] --> Idle\n                  Idle --> Processing : Receive Task\n                  Processing --> Idle : Task Completed\n                  Processing --> Error : Task Failed\n                  Error --> Idle : Reset\n                ",
                 "description": "Identify the main purpose of a Statechart among the options below.",
                 "interactiveDiagram": {
                   "layout": "flow",
@@ -57,107 +57,12 @@ export const courses = [
                   "def-dynamic"
                 ],
                 "explanation": "A Statechart models dynamic behavior (how an object changes over time), unlike a Class Diagram which models static structure.",
-                "explanationMermaid": "graph LR\n  A(Statechart) -->|Correct| B(Dynamic behavior)\n  A -.->|Incorrect| C(Static structure)\n  style B fill:#bbf7d0,stroke:#22c55e"
+                "explanationMermaid": "graph LR\n                  A(Statechart) -->|Correct| B(Dynamic behavior)\n                  A -.->|Incorrect| C(Static structure)\n                  style B fill:#bbf7d0,stroke:#22c55e\n                "
               },
-              {
-                "prompt": "Why use Statecharts over Class Diagrams?",
-                "theory": "### Statecharts vs Class Diagrams\n\nWhile Class Diagrams show the **static structure** (what classes exist, their attributes, and relationships), Statecharts show the **dynamic behavior** (how an object of a class reacts to events over its lifetime).",
-                "description": "Match the diagram to its correct usage.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Static Structure"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "modeled by"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-class",
-                    "type": "document",
-                    "label": "Class Diagram"
-                  },
-                  {
-                    "id": "ans-state",
-                    "type": "document",
-                    "label": "Statechart Diagram"
-                  },
-                  {
-                    "id": "ans-use",
-                    "type": "document",
-                    "label": "Use Case Diagram"
-                  }
-                ],
-                "answer": [
-                  "ans-class"
-                ],
-                "explanation": "Class Diagrams are for static structure. Statecharts are for dynamic behavior over time."
-              },
-              {
-                "prompt": "Who uses Statecharts?",
-                "theory": "### Applications of Statecharts\n\nStatecharts are highly visual and intuitive. They are heavily used by:\n- **Software Engineers** to design reactive UIs and backend logic.\n- **Game Developers** to control NPC AI behavior.\n- **Embedded Systems Engineers** for hardware control (like microwaves or ATMs).",
-                "description": "Which of the following is a prime candidate for a Statechart?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Best Candidate"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-ui",
-                    "type": "process",
-                    "label": "A reactive login form"
-                  },
-                  {
-                    "id": "ans-math",
-                    "type": "process",
-                    "label": "A math sorting algorithm"
-                  },
-                  {
-                    "id": "ans-dto",
-                    "type": "process",
-                    "label": "A simple Data Transfer Object"
-                  }
-                ],
-                "answer": [
-                  "ans-ui"
-                ],
-                "explanation": "A reactive login form has multiple states (Idle, Submitting, Success, Error) triggered by user events, making it a perfect fit."
-              }
-            ]
-          },
-          {
-            "id": "l1-m2",
-            "title": "States & Events",
-            "badge": "Checkpoint",
-            "questions": [
               {
                 "prompt": "When does a state change occur?",
-                "theory": "### State Transitions\n\nA state change (transition) happens when the object receives a specific **event** (or message). \nIf the event is valid for the current state, the object will execute any associated actions and move to the target state.\n\nFor example, a washing machine only transitions from `Idle` to `Washing` when the `StartButton` event occurs.",
-                "theoryMermaid": "stateDiagram-v2\n  Idle --> Washing : StartButton",
+                "theory": "\n### State Transitions\n\nA state change (transition) happens when the object receives a specific **event** (or message). \nIf the event is valid for the current state, the object will execute any associated actions and move to the target state.\n\nFor example, a washing machine only transitions from `Idle` to `Washing` when the `StartButton` event occurs.\n                ",
+                "theoryMermaid": "stateDiagram-v2\n                  Idle --> Washing : StartButton\n                ",
                 "description": "Drag the factor that causes a state transition.",
                 "interactiveDiagram": {
                   "layout": "flow",
@@ -200,104 +105,9 @@ export const courses = [
                 "explanation": "Transitions are triggered by events (e.g., button clicks, timer expirations, messages from other components)."
               },
               {
-                "prompt": "What defines a State?",
-                "theory": "### Concept of a State\n\nA **State** represents a condition or situation during the life of an object during which it satisfies some condition, performs some activity, or waits for some event.\nNames of states are usually adjectives or noun phrases (e.g., `Idle`, `Processing`, `Error`).",
-                "description": "Identify a good name for a State.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Good State Name"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "like"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-s1",
-                    "type": "process",
-                    "label": "Processing"
-                  },
-                  {
-                    "id": "ans-s2",
-                    "type": "process",
-                    "label": "CalculateTotal"
-                  },
-                  {
-                    "id": "ans-s3",
-                    "type": "process",
-                    "label": "User clicks button"
-                  }
-                ],
-                "answer": [
-                  "ans-s1"
-                ],
-                "explanation": "States are usually adjectives or noun phrases describing a condition. 'CalculateTotal' is an action, and 'User clicks button' is an event."
-              },
-              {
-                "prompt": "How are Events named?",
-                "theory": "### Concept of an Event\n\nAn **Event** is a significant occurrence that has a location in time and space. In Statecharts, events are the triggers that cause state transitions.\nNames of events are usually verbs or actions (e.g., `click`, `timeout`, `submit`).",
-                "description": "Identify a good name for an Event.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Good Event Name"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "like"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-e1",
-                    "type": "process",
-                    "label": "onSubmit"
-                  },
-                  {
-                    "id": "ans-e2",
-                    "type": "process",
-                    "label": "Loading"
-                  },
-                  {
-                    "id": "ans-e3",
-                    "type": "process",
-                    "label": "Pending"
-                  }
-                ],
-                "answer": [
-                  "ans-e1"
-                ],
-                "explanation": "Events are usually verbs or trigger names. 'Loading' and 'Pending' are conditions (States)."
-              }
-            ]
-          },
-          {
-            "id": "l1-m3",
-            "title": "Advanced Basic Concepts",
-            "badge": "Checkpoint",
-            "questions": [
-              {
                 "prompt": "Distinguish 2 types of Statecharts",
-                "theory": "### Behavioral vs. Protocol Statecharts\n\n1. **Behavioral State Machine**: Used to specify the exact behavior (implementation) of a part of a system.\n2. **Protocol State Machine**: Used to specify the valid sequences of events that an object may receive, without defining its exact behavior. Often used for interfaces or network protocols.",
-                "theoryMermaid": "graph TD\n  A[Statechart] --> B(Behavioral)\n  A --> C(Protocol)\n  B --> D[Implementation Details]\n  C --> E[Valid Event Sequences]\n  style B fill:#bfdbfe\n  style C fill:#bbf7d0",
+                "theory": "\n### Behavioral vs. Protocol Statecharts\n\n1. **Behavioral State Machine**: Used to specify the exact behavior (implementation) of a part of a system.\n2. **Protocol State Machine**: Used to specify the valid sequences of events that an object may receive, without defining its exact behavior. Often used for interfaces or network protocols.\n                ",
+                "theoryMermaid": "graph TD\n                  A[Statechart] --> B(Behavioral)\n                  A --> C(Protocol)\n                  B --> D[Implementation Details]\n                  C --> E[Valid Event Sequences]\n                  style B fill:#bfdbfe\n                  style C fill:#bbf7d0\n                ",
                 "description": "Which type of statechart describes implementation details?",
                 "interactiveDiagram": {
                   "layout": "flow",
@@ -338,100 +148,12 @@ export const courses = [
                   "type-behav"
                 ],
                 "explanation": "Behavioral State Machines model the internal logic and implementation details of a system component."
-              },
-              {
-                "prompt": "Guard Conditions - Basic Idea",
-                "theory": "### Guard Conditions\n\nSometimes an event occurs, but we only want to change state if a specific condition is true. This is called a **Guard**.\nA guard is a boolean expression evaluated dynamically when the event is triggered. If false, the transition does not occur.",
-                "description": "What determines if an event is allowed to cause a transition?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Allows Transition"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "checked by"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-g1",
-                    "type": "document",
-                    "label": "Guard Condition"
-                  },
-                  {
-                    "id": "ans-g2",
-                    "type": "document",
-                    "label": "Event Name"
-                  },
-                  {
-                    "id": "ans-g3",
-                    "type": "document",
-                    "label": "State Parameter"
-                  }
-                ],
-                "answer": [
-                  "ans-g1"
-                ],
-                "explanation": "A Guard Condition must evaluate to true for the transition to proceed when the event fires."
-              },
-              {
-                "prompt": "Actions vs Transitions",
-                "theory": "### Actions\n\nWhen a transition occurs, it can trigger an **Action**. An action is an instantaneous, uninterruptible behavior (like updating a variable, or sending a quick message) that happens while moving between states.",
-                "description": "What happens during a transition?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "State Transition"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "triggers"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-a1",
-                    "type": "process",
-                    "label": "Action"
-                  },
-                  {
-                    "id": "ans-a2",
-                    "type": "process",
-                    "label": "Another Event"
-                  },
-                  {
-                    "id": "ans-a3",
-                    "type": "process",
-                    "label": "Class creation"
-                  }
-                ],
-                "answer": [
-                  "ans-a1"
-                ],
-                "explanation": "A transition can trigger an Action to be executed as the object moves from one state to another."
               }
             ]
           },
           {
-            "id": "l1-m4",
-            "title": "Level 1 Final Review",
+            "id": "checkpoint-1",
+            "title": "Level 1 Review",
             "badge": "Checkpoint",
             "questions": [
               {
@@ -501,89 +223,6 @@ export const courses = [
                   "ans-final"
                 ],
                 "explanation": "Starts at Initial, transitions via Events between States, and ends at Final."
-              },
-              {
-                "prompt": "Identify parts of a transition",
-                "theory": "### Quick Recap\n\nA full transition label often looks like this conceptually: `Event [Guard] / Action`.\nLet's see if you can identify which is which.",
-                "description": "In the phrase `click [isValid] / submitForm()`, what is `submitForm()`?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "process",
-                      "label": "submitForm()"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is the"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-p1",
-                    "type": "document",
-                    "label": "Action"
-                  },
-                  {
-                    "id": "ans-p2",
-                    "type": "document",
-                    "label": "Event"
-                  },
-                  {
-                    "id": "ans-p3",
-                    "type": "document",
-                    "label": "Guard"
-                  }
-                ],
-                "answer": [
-                  "ans-p1"
-                ],
-                "explanation": "`submitForm()` is the Action that gets executed if the `click` event occurs and the `isValid` guard is true."
-              },
-              {
-                "prompt": "True or False: Statecharts model static class fields",
-                "theory": "### The Core Purpose\n\nRemember, Statecharts are specifically designed for dynamic, reactive logic over time, tracking states, events, and transitions.",
-                "description": "Statecharts are used to document the static fields and database schema of an application.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Statement is"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "?"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-f1",
-                    "type": "document",
-                    "label": "False"
-                  },
-                  {
-                    "id": "ans-f2",
-                    "type": "document",
-                    "label": "True"
-                  }
-                ],
-                "answer": [
-                  "ans-f1"
-                ],
-                "explanation": "False! Statecharts model dynamic behavior, while Class Diagrams model static fields and schemas."
               }
             ]
           }
