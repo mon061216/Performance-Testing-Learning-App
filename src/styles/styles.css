@@ -2543,3 +2543,144 @@ button {
   animation: float 3s infinite ease-in-out;
 }
 
+/* --- SELECTABLE DIAGRAM STYLES --- */
+.diagram-node.selectable-node {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.diagram-node.selectable-node:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.diagram-node.selectable-node.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 2px #bfdbfe, 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.diagram-node.selectable-node.correct {
+  border-color: #22c55e;
+  background-color: #f0fdf4;
+  color: #15803d;
+  box-shadow: 0 0 0 2px #bbf7d0, 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.diagram-node.selectable-node.wrong {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  box-shadow: 0 0 0 2px #fecaca, 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.diagram-node.selectable-node.missed {
+  border-color: #eab308;
+  background-color: #fefce8;
+  color: #a16207;
+  border-style: dashed;
+}
+
+.diagram-transition.selectable-node {
+  cursor: pointer;
+}
+
+.diagram-transition.selectable-node:hover {
+  background: #3b82f6;
+}
+
+.diagram-transition.selectable-node:hover .transition-arrow {
+  border-left-color: #3b82f6;
+}
+
+.diagram-transition.selectable-node.selected {
+  background: #3b82f6;
+}
+.diagram-transition.selectable-node.selected .transition-arrow {
+  border-left-color: #3b82f6;
+}
+.diagram-transition.selectable-node.selected .transition-label {
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-weight: 700;
+}
+
+.diagram-transition.selectable-node.correct {
+  background: #22c55e;
+}
+.diagram-transition.selectable-node.correct .transition-arrow {
+  border-left-color: #22c55e;
+}
+.diagram-transition.selectable-node.correct .transition-label {
+  color: #15803d;
+  background: #f0fdf4;
+}
+
+.diagram-transition.selectable-node.wrong {
+  background: #ef4444;
+}
+.diagram-transition.selectable-node.wrong .transition-arrow {
+  border-left-color: #ef4444;
+}
+.diagram-transition.selectable-node.wrong .transition-label {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.diagram-transition.selectable-node.missed {
+  background: #eab308;
+  border-style: dashed;
+}
+.diagram-transition.selectable-node.missed .transition-arrow {
+  border-left-color: #eab308;
+}
+.diagram-transition.selectable-node.missed .transition-label {
+  color: #a16207;
+  background: #fefce8;
+}
+.interactive-diagram-container.layout-brainstorm {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.brainstorm-slots-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+
+/* Optional: Draw simple lines using CSS */
+.brainstorm-slots-container::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.brainstorm-slots-container .diagram-node {
+  position: relative;
+}
+
+.brainstorm-slots-container .diagram-node::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  background: #cbd5e1;
+}
+.interactive-diagram-container.layout-vertical {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

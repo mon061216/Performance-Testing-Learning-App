@@ -60,48 +60,126 @@ export const courses = [
                 "explanationMermaid": "graph LR\n  A(Statechart) -->|Correct| B(Dynamic behavior)\n  A -.->|Incorrect| C(Static structure)\n  style B fill:#bbf7d0,stroke:#22c55e"
               },
               {
-                "prompt": "Why use Statecharts over Class Diagrams?",
-                "theory": "### Statecharts vs Class Diagrams\n\nWhile Class Diagrams show the **static structure** (what classes exist, their attributes, and relationships), Statecharts show the **dynamic behavior** (how an object of a class reacts to events over its lifetime).",
-                "description": "Match the diagram to its correct usage.",
-                "interactiveDiagram": {
+                "prompt": "Identify the States",
+                "theory": "### Recognizing States\n\nIn a statechart, states are typically represented by boxes with rounded corners. Events or transitions are represented by arrows connecting these states.",
+                "description": "Select all the boxes that represent a state. You must select at least 2 states.",
+                "selectableDiagram": {
                   "layout": "flow",
+                  "minSelection": 2,
+                  "nodes": [
+                    {
+                      "id": "init",
+                      "type": "initial",
+                      "label": "Start",
+                      "isSelectable": false
+                    },
+                    {
+                      "id": "e-init",
+                      "type": "transition",
+                      "isSelectable": false
+                    },
+                    {
+                      "id": "s-idle",
+                      "type": "state",
+                      "label": "Idle",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "e-receive",
+                      "type": "transition",
+                      "label": "Receive Task",
+                      "direction": "right",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "s-processing",
+                      "type": "state",
+                      "label": "Processing",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "e-fail",
+                      "type": "transition",
+                      "label": "Task Failed",
+                      "direction": "right",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "s-error",
+                      "type": "state",
+                      "label": "Error",
+                      "isSelectable": true
+                    }
+                  ]
+                },
+                "answer": [
+                  "s-idle",
+                  "s-processing",
+                  "s-error"
+                ],
+                "explanation": "Idle, Processing, and Error are states. The arrows (Receive Task, Task Failed) are transitions/events."
+              },
+              {
+                "prompt": "What are the applications of Statecharts?",
+                "theory": "### Statechart Applications\n\nStatecharts are heavily used to model complex, dynamic behaviors in systems. Common applications include designing reactive User Interfaces, controlling NPC Artificial Intelligence in games, and managing hardware logic in Embedded Systems.",
+                "description": "Drag and drop the correct applications of statecharts.",
+                "interactiveDiagram": {
+                  "layout": "brainstorm",
                   "nodes": [
                     {
                       "type": "state",
-                      "label": "Static Structure"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "modeled by"
+                      "label": "Statechart Applications"
                     },
                     {
                       "type": "slot",
                       "index": 0,
-                      "slotType": "state"
+                      "slotType": "process"
+                    },
+                    {
+                      "type": "slot",
+                      "index": 1,
+                      "slotType": "process"
+                    },
+                    {
+                      "type": "slot",
+                      "index": 2,
+                      "slotType": "process"
                     }
                   ]
                 },
                 "cards": [
                   {
-                    "id": "ans-class",
-                    "type": "document",
-                    "label": "Class Diagram"
+                    "id": "app-ui",
+                    "type": "process",
+                    "label": "Reactive UIs"
                   },
                   {
-                    "id": "ans-state",
-                    "type": "document",
-                    "label": "Statechart Diagram"
+                    "id": "app-ai",
+                    "type": "process",
+                    "label": "NPC AI"
                   },
                   {
-                    "id": "ans-use",
-                    "type": "document",
-                    "label": "Use Case Diagram"
+                    "id": "app-db",
+                    "type": "process",
+                    "label": "Database Schema"
+                  },
+                  {
+                    "id": "app-hw",
+                    "type": "process",
+                    "label": "Hardware Control"
+                  },
+                  {
+                    "id": "app-static",
+                    "type": "process",
+                    "label": "Static Models"
                   }
                 ],
                 "answer": [
-                  "ans-class"
+                  "app-ui",
+                  "app-ai",
+                  "app-hw"
                 ],
-                "explanation": "Class Diagrams are for static structure. Statecharts are for dynamic behavior over time."
+                "explanation": "Statecharts model dynamic behavior, making them perfect for UIs, game AI, and hardware. Databases and static models use ER or Class diagrams instead."
               },
               {
                 "prompt": "Who uses Statecharts?",
@@ -156,48 +234,37 @@ export const courses = [
             "questions": [
               {
                 "prompt": "When does a state change occur?",
-                "theory": "### State Transitions\n\nA state change (transition) happens when the object receives a specific **event** (or message). \nIf the event is valid for the current state, the object will execute any associated actions and move to the target state.\n\nFor example, a washing machine only transitions from `Idle` to `Washing` when the `StartButton` event occurs.",
-                "theoryMermaid": "stateDiagram-v2\n  Idle --> Washing : StartButton",
-                "description": "Drag the factor that causes a state transition.",
-                "interactiveDiagram": {
-                  "layout": "flow",
+                "theory": "### State Transitions\n\nA state change (transition) happens when the object receives a specific **event** (or message). \nIf the event is valid for the current state, the object will execute any associated actions and move to the target state.",
+                "description": "Select the component that represents an **event** causing a state transition.",
+                "selectableDiagram": {
+                  "layout": "vertical",
+                  "minSelection": 1,
                   "nodes": [
                     {
+                      "id": "s-idle",
                       "type": "state",
-                      "label": "Current State"
+                      "label": "Idle",
+                      "isSelectable": true
                     },
                     {
+                      "id": "t-start",
                       "type": "transition",
-                      "label": "?"
+                      "label": "StartButton",
+                      "direction": "down",
+                      "isSelectable": true
                     },
                     {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
+                      "id": "s-washing",
+                      "type": "state",
+                      "label": "Washing",
+                      "isSelectable": true
                     }
                   ]
                 },
-                "cards": [
-                  {
-                    "id": "chg-event",
-                    "type": "process",
-                    "label": "Event/Message"
-                  },
-                  {
-                    "id": "chg-time",
-                    "type": "process",
-                    "label": "Class instantiation"
-                  },
-                  {
-                    "id": "chg-attr",
-                    "type": "process",
-                    "label": "Attribute change"
-                  }
-                ],
                 "answer": [
-                  "chg-event"
+                  "t-start"
                 ],
-                "explanation": "Transitions are triggered by events (e.g., button clicks, timer expirations, messages from other components)."
+                "explanation": "Transitions are triggered by events (e.g., button clicks, timer expirations, messages from other components). Here, 'StartButton' is the event."
               },
               {
                 "prompt": "What defines a State?",
@@ -246,46 +313,80 @@ export const courses = [
               {
                 "prompt": "How are Events named?",
                 "theory": "### Concept of an Event\n\nAn **Event** is a significant occurrence that has a location in time and space. In Statecharts, events are the triggers that cause state transitions.\nNames of events are usually verbs or actions (e.g., `click`, `timeout`, `submit`).",
-                "description": "Identify a good name for an Event.",
-                "interactiveDiagram": {
+                "description": "Select 4 correct Event names from the options below.",
+                "selectableDiagram": {
                   "layout": "flow",
+                  "minSelection": 4,
                   "nodes": [
                     {
+                      "id": "ans-e1",
                       "type": "state",
-                      "label": "Good Event Name"
+                      "label": "onSubmit",
+                      "isSelectable": true
                     },
                     {
-                      "type": "transition",
-                      "label": "like"
+                      "id": "ans-s1",
+                      "type": "state",
+                      "label": "Loading",
+                      "isSelectable": true
                     },
                     {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
+                      "id": "ans-e2",
+                      "type": "state",
+                      "label": "onClick",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s2",
+                      "type": "state",
+                      "label": "Pending",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s3",
+                      "type": "state",
+                      "label": "Idle",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-e3",
+                      "type": "state",
+                      "label": "timeout",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s4",
+                      "type": "state",
+                      "label": "Processing",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-e4",
+                      "type": "state",
+                      "label": "initialize",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s5",
+                      "type": "state",
+                      "label": "Error",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s6",
+                      "type": "state",
+                      "label": "Active",
+                      "isSelectable": true
                     }
                   ]
                 },
-                "cards": [
-                  {
-                    "id": "ans-e1",
-                    "type": "process",
-                    "label": "onSubmit"
-                  },
-                  {
-                    "id": "ans-e2",
-                    "type": "process",
-                    "label": "Loading"
-                  },
-                  {
-                    "id": "ans-e3",
-                    "type": "process",
-                    "label": "Pending"
-                  }
-                ],
                 "answer": [
-                  "ans-e1"
+                  "ans-e1",
+                  "ans-e2",
+                  "ans-e3",
+                  "ans-e4"
                 ],
-                "explanation": "Events are usually verbs or trigger names. 'Loading' and 'Pending' are conditions (States)."
+                "explanation": "Events are usually verbs or trigger names like 'onSubmit', 'onClick', 'timeout', and 'initialize'. The others ('Loading', 'Pending', 'Idle', etc.) are conditions or states."
               }
             ]
           },
@@ -391,12 +492,8 @@ export const courses = [
                   "layout": "flow",
                   "nodes": [
                     {
-                      "type": "state",
-                      "label": "State Transition"
-                    },
-                    {
                       "type": "transition",
-                      "label": "triggers"
+                      "label": "Transition triggers"
                     },
                     {
                       "type": "slot",

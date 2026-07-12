@@ -29,7 +29,10 @@ export function InteractiveDiagram({
       >
         {card ? (
           <motion.button 
-            layoutId={`card-${card.id}`}
+            key={card.id}
+            layoutId={result?.kind === 'answer' ? undefined : `card-${card.id}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             className={`shape-card placed ${card.type}`} 
             onClick={() => removeCard(index)}
           >
@@ -80,6 +83,22 @@ export function InteractiveDiagram({
       </div>
     );
   };
+
+  if (diagram.layout === 'brainstorm') {
+    const centerNode = diagram.nodes.find(n => n.type === 'state');
+    const slots = diagram.nodes.filter(n => n.type === 'slot');
+    return (
+      <div className="interactive-diagram-container layout-brainstorm">
+        <div className="brainstorm-center" style={{ position: 'relative', paddingBottom: '20px' }}>
+          {centerNode && renderNode(centerNode, 0)}
+          <div style={{ position: 'absolute', bottom: 0, left: '50%', width: '2px', height: '20px', background: '#cbd5e1', transform: 'translateX(-50%)' }}></div>
+        </div>
+        <div className="brainstorm-slots-container">
+          {slots.map((slot, i) => renderNode(slot, diagram.nodes.indexOf(slot)))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`interactive-diagram-container layout-${diagram.layout || 'flow'}`}>

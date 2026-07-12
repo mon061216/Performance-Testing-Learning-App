@@ -9,6 +9,7 @@ import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { ExplanationModal } from "../components/ExplanationModal";
 import { PageTransition } from "../components/PageTransition";
 import { InteractiveDiagram } from "../components/InteractiveDiagram";
+import { SelectableDiagram } from "../components/SelectableDiagram";
 
 export function Exercise() {
   const { courseId, lessonIndex: lessonIndexStr } = useParams();
@@ -25,6 +26,7 @@ export function Exercise() {
   const question = lesson?.questions?.[currentQuestionIndex];
 
   const [placements, setPlacements] = useState([]);
+  const [selections, setSelections] = useState([]);
   const [attempts, setAttempts] = useState(0);
   const [result, setResult] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
@@ -36,7 +38,8 @@ export function Exercise() {
   // Re-initialize state when route changes or question index changes
   useEffect(() => {
     if (question) {
-      setPlacements(Array(question.answer.length).fill(null));
+      setPlacements(Array(question.answer?.length || 0).fill(null));
+      setSelections([]);
       setAttempts(0);
       setResult(null);
       setDraggedId(null);
@@ -46,12 +49,18 @@ export function Exercise() {
 
   const shuffledCards = useMemo(() => {
     if (!question) return [];
-    return [...question.cards].sort(() => Math.random() - 0.5);
+    return [...(question.cards || [])].sort(() => Math.random() - 0.5);
   }, [courseId, lessonIndex, currentQuestionIndex, question]);
 
   const placedIds = placements.filter(Boolean);
   const availableCards = shuffledCards.filter((card) => !placedIds.includes(card.id));
-  const isFilled = placements.length > 0 && placements.every(Boolean);
+  
+  let isFilled = false;
+  if (question?.selectableDiagram) {
+    isFilled = selections.length > 0;
+  } else {
+    isFilled = placements.length > 0 && placements.every(Boolean);
+  }
 
   if (!course || !lesson || !question) {
     return (
@@ -82,19 +91,42 @@ export function Exercise() {
     setPlacements((current) => current.map((id, index) => (index === slotIndex ? null : id)));
   };
 
+  const toggleSelection = (nodeId) => {
+    if (result?.locked) return;
+    if (result?.kind === 'try') setResult(null);
+    setSelections(current => {
+      if (current.includes(nodeId)) {
+        return current.filter(id => id !== nodeId);
+      }
+      return [...current, nodeId];
+    });
+  };
+
   const retry = () => {
     setResult(null);
-    setPlacements(Array(question.answer.length).fill(null));
+    setPlacements(Array(question.answer?.length || 0).fill(null));
+    setSelections([]);
   };
 
   const showAnswer = () => {
     setHasFailed(true);
     setResult({ kind: "answer", locked: true, title: "Incorrect!" });
-    setPlacements(question.answer);
+    if (!question.selectableDiagram) {
+      setPlacements(question.answer);
+    }
   };
 
   const checkAnswer = () => {
-    const correct = placements.every((id, index) => id === question.answer[index]);
+    let correct = false;
+    
+    if (question.selectableDiagram) {
+      const isCountCorrect = selections.length === question.answer.length;
+      const allSelectedAreCorrect = selections.every(id => question.answer.includes(id));
+      correct = isCountCorrect && allSelectedAreCorrect;
+    } else {
+      correct = placements.every((id, index) => id === question.answer[index]);
+    }
+
     if (correct) {
       setResult({ kind: "correct", locked: true, title: "Correct!" });
       return;
@@ -109,6 +141,7 @@ export function Exercise() {
       setCurrentQuestionIndex((i) => i + 1);
       setResult(null);
       setPlacements(Array(question?.answer?.length || 0).fill(null));
+      setSelections([]);
       setDraggedId(null);
     } else {
       const isFailure = hasFailed || result?.kind === "answer";
@@ -122,7 +155,7 @@ export function Exercise() {
     navigate(`/course/${course.id}`);
   };
 
-  const findCard = (id) => question.cards.find((card) => card.id === id);
+  const findCard = (id) => question.cards?.find((card) => card.id === id);
 
   if (showMilestoneComplete && milestoneData) {
     return (
@@ -168,12 +201,24 @@ export function Exercise() {
             {currentQuestionIndex === 0 && <h3>Your task</h3>}
             <h2>{question.prompt}</h2>
             {currentQuestionIndex === 0 && <p>{question.description}</p>}
-            <p className="hint-text">💡 Drag and drop the cards below into the corresponding slots.</p>
+            {question.selectableDiagram ? (
+              <p className="hint-text">💡 Click on the boxes in the diagram to select them.</p>
+            ) : (
+              <p className="hint-text">💡 Drag and drop the cards below into the corresponding slots.</p>
+            )}
           </div>
         </div>
 
         <div className="interactive-widget">
-          {question.interactiveDiagram ? (
+          {question.selectableDiagram ? (
+            <SelectableDiagram
+              diagram={question.selectableDiagram}
+              selections={selections}
+              toggleSelection={toggleSelection}
+              result={result}
+              question={question}
+            />
+          ) : question.interactiveDiagram ? (
             <InteractiveDiagram 
               diagram={question.interactiveDiagram}
               placements={placements}
@@ -202,7 +247,10 @@ export function Exercise() {
                       <div className="slot-content">
                         {card ? (
                           <motion.button 
-                            layoutId={`card-${card.id}`}
+                            key={card.id}
+                            layoutId={result?.kind === 'answer' ? undefined : `card-${card.id}`}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             className={`shape-card placed ${card.type}`} 
                             onClick={() => removeCard(index)}
                           >
@@ -221,32 +269,34 @@ export function Exercise() {
           )}
         </div>
 
-        <div className="available-cards-container">
-          <div className="cards-horizontal">
-            <AnimatePresence>
-              {availableCards.map((card) => (
-                <motion.button
-                  key={card.id}
-                  layoutId={`card-${card.id}`}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  draggable={!result?.locked}
-                  className={`shape-card ${card.type}`}
-                  onDragStart={() => setDraggedId(card.id)}
-                  onDragEnd={() => setDraggedId(null)}
-                  onClick={() => {
-                    const emptyIndex = placements.findIndex((id) => !id);
-                    if (emptyIndex >= 0) dropCard(emptyIndex, card.id);
-                  }}
-                >
-                  <ShapeIcon type={card.type} />
-                  <span>{card.label}</span>
-                </motion.button>
-              ))}
-            </AnimatePresence>
+        {!question.selectableDiagram && (
+          <div className="available-cards-container">
+            <div className="cards-horizontal">
+              <AnimatePresence>
+                {availableCards.map((card) => (
+                  <motion.button
+                    key={card.id}
+                    layoutId={`card-${card.id}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    draggable={!result?.locked}
+                    className={`shape-card ${card.type}`}
+                    onDragStart={() => setDraggedId(card.id)}
+                    onDragEnd={() => setDraggedId(null)}
+                    onClick={() => {
+                      const emptyIndex = placements.findIndex((id) => !id);
+                      if (emptyIndex >= 0) dropCard(emptyIndex, card.id);
+                    }}
+                  >
+                    <ShapeIcon type={card.type} />
+                    <span>{card.label}</span>
+                  </motion.button>
+                ))}
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
+        )}
 
         {!result && (
            <div className="run-button-container">
