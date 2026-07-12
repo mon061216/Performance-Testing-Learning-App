@@ -50,7 +50,7 @@ export function SelectableDiagram({
       return (
         <div {...commonProps} className={`diagram-node initial-state-container ${isSelectable ? 'selectable-node' : ''} ${isSelected ? 'selected' : ''} ${resultClass}`}>
           <div className="initial-state-marker"></div>
-          {node.label && <span className="node-label">{node.mermaid ? <MermaidDiagram chart={node.mermaid} /> : node.label}</span>}
+          {(node.label || node.mermaid) && <span className="node-label">{node.mermaid ? <MermaidDiagram chart={node.mermaid} /> : node.label}</span>}
         </div>
       );
     }
@@ -58,7 +58,7 @@ export function SelectableDiagram({
       return (
         <div {...commonProps} className={`diagram-node final-state-container ${isSelectable ? 'selectable-node' : ''} ${isSelected ? 'selected' : ''} ${resultClass}`}>
           <div className="final-state-marker"></div>
-          {node.label && <span className="node-label">{node.label}</span>}
+          {(node.label || node.mermaid) && <span className="node-label">{node.mermaid ? <MermaidDiagram chart={node.mermaid} /> : node.label}</span>}
         </div>
       );
     }
@@ -81,7 +81,7 @@ export function SelectableDiagram({
         whileHover={!result?.locked && isSelectable ? { scale: 1.05 } : {}}
         whileTap={!result?.locked && isSelectable ? { scale: 0.95 } : {}}
       >
-        {node.label}
+        {node.mermaid ? <MermaidDiagram chart={node.mermaid} /> : node.label}
       </motion.div>
     );
   };

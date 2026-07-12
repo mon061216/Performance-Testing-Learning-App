@@ -2826,3 +2826,8 @@ button {
 .path-node.checkpoint .node-3d-face {
   border-radius: 50% !important;
 }
+
+/* FIX MERMAID TEXT CUTOFF */
+.mermaid-container svg foreignObject { overflow: visible !important; }
+.mermaid-container svg .edgeLabel, .mermaid-container svg .nodeLabel, .mermaid-container svg .label { white-space: nowrap !important; line-height: 1.2 !important; }
+

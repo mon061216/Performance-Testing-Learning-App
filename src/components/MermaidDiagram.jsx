@@ -5,7 +5,7 @@ mermaid.initialize({
   startOnLoad: false,
   theme: 'base',
   securityLevel: 'loose',
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Arial, sans-serif',
   themeVariables: {
     primaryColor: '#e0e7ff',
     primaryTextColor: '#1e293b',
