@@ -11,31 +11,12 @@ export const courses = [
           {
             "id": "l1-m1",
             "title": "Introduction to Statecharts",
-            "badge": "Checkpoint",
             "questions": [
               {
                 "prompt": "What does a Statechart model?",
                 "theory": "### What is a Statechart?\n\nA Statechart is a diagram used to model the **dynamic behavior** of a single object (or a system) over time.\n\n- It describes the various **states** an object can be in.\n- It shows how the object transitions from one state to another in response to **events**.\n- It is heavily used in designing reactive systems like UI components, games, embedded systems, etc.",
                 "theoryMermaid": "stateDiagram-v2\n  [*] --> Idle\n  Idle --> Processing : Receive Task\n  Processing --> Idle : Task Completed\n  Processing --> Error : Task Failed\n  Error --> Idle : Reset",
                 "description": "Identify the main purpose of a Statechart among the options below.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Statechart"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "used to model"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "def-dynamic",
@@ -57,7 +38,10 @@ export const courses = [
                   "def-dynamic"
                 ],
                 "explanation": "A Statechart models dynamic behavior (how an object changes over time), unlike a Class Diagram which models static structure.",
-                "explanationMermaid": "graph LR\n  A(Statechart) -->|Correct| B(Dynamic behavior)\n  A -.->|Incorrect| C(Static structure)\n  style B fill:#bbf7d0,stroke:#22c55e"
+                "explanationMermaid": "graph LR\n  A(Statechart) -->|Correct| B(Dynamic behavior)\n  A -.->|Incorrect| C(Static structure)\n  style B fill:#bbf7d0,stroke:#22c55e",
+                "slots": [
+                  "Statechart used to model:"
+                ]
               },
               {
                 "prompt": "Identify the States",
@@ -179,30 +163,13 @@ export const courses = [
                   "app-ai",
                   "app-hw"
                 ],
-                "explanation": "Statecharts model dynamic behavior, making them perfect for UIs, game AI, and hardware. Databases and static models use ER or Class diagrams instead."
+                "explanation": "Statecharts model dynamic behavior, making them perfect for UIs, game AI, and hardware. Databases and static models use ER or Class diagrams instead.",
+                "orderMatters": false
               },
               {
                 "prompt": "Who uses Statecharts?",
                 "theory": "### Applications of Statecharts\n\nStatecharts are highly visual and intuitive. They are heavily used by:\n- **Software Engineers** to design reactive UIs and backend logic.\n- **Game Developers** to control NPC AI behavior.\n- **Embedded Systems Engineers** for hardware control (like microwaves or ATMs).",
                 "description": "Which of the following is a prime candidate for a Statechart?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Best Candidate"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-ui",
@@ -223,21 +190,23 @@ export const courses = [
                 "answer": [
                   "ans-ui"
                 ],
-                "explanation": "A reactive login form has multiple states (Idle, Submitting, Success, Error) triggered by user events, making it a perfect fit."
+                "explanation": "A reactive login form has multiple states (Idle, Submitting, Success, Error) triggered by user events, making it a perfect fit.",
+                "slots": [
+                  "Best Candidate is:"
+                ]
               }
             ]
           },
           {
             "id": "l1-m2",
             "title": "States & Events",
-            "badge": "Checkpoint",
             "questions": [
               {
                 "prompt": "When does a state change occur?",
                 "theory": "### State Transitions\n\nA state change (transition) happens when the object receives a specific **event** (or message). \nIf the event is valid for the current state, the object will execute any associated actions and move to the target state.",
                 "description": "Select the component that represents an **event** causing a state transition.",
                 "selectableDiagram": {
-                  "layout": "vertical",
+                  "layout": "flow",
                   "minSelection": 1,
                   "nodes": [
                     {
@@ -250,7 +219,7 @@ export const courses = [
                       "id": "t-start",
                       "type": "transition",
                       "label": "StartButton",
-                      "direction": "down",
+                      "direction": "right",
                       "isSelectable": true
                     },
                     {
@@ -268,54 +237,89 @@ export const courses = [
               },
               {
                 "prompt": "What defines a State?",
-                "theory": "### Concept of a State\n\nA **State** represents a condition or situation during the life of an object during which it satisfies some condition, performs some activity, or waits for some event.\nNames of states are usually adjectives or noun phrases (e.g., `Idle`, `Processing`, `Error`).",
-                "description": "Identify a good name for a State.",
-                "interactiveDiagram": {
-                  "layout": "flow",
+                "theory": "### Concept of a State\n\nA **State** represents a condition or situation during the life of an object during which it satisfies some condition, performs some activity, or waits for some event.\n\n**How to name a State:**\nA good state name should reflect the *ongoing condition* or *status* of the object. Therefore, they are usually **adjectives**, **passive verbs**, or **gerunds (V-ing)** (e.g., Idle, Processing, Authenticated, Pending).\nThey should **not** be actions/verbs (like CalculateTotal) which are functions, and should **not** be events (like onClick) which are triggers.",
+                "description": "Select all the valid State names from the options below.",
+                "answer": [
+                  "ans-s1",
+                  "ans-s2",
+                  "ans-s3",
+                  "ans-s4",
+                  "ans-s5"
+                ],
+                "explanation": "States are usually adjectives or noun phrases describing a condition (Processing, Idle, Pending, Authenticated, Error). Actions (CalculateTotal, fetchData) and Events (User clicks button, onSubmit, Timeout) are not states.",
+                "selectableDiagram": {
+                  "layout": "wrap",
+                  "minSelection": 5,
                   "nodes": [
                     {
+                      "id": "ans-s1",
                       "type": "state",
-                      "label": "Good State Name"
+                      "label": "Processing",
+                      "isSelectable": true
                     },
                     {
-                      "type": "transition",
-                      "label": "like"
+                      "id": "ans-a1",
+                      "type": "state",
+                      "label": "CalculateTotal",
+                      "isSelectable": true
                     },
                     {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
+                      "id": "ans-e1",
+                      "type": "state",
+                      "label": "User clicks button",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s2",
+                      "type": "state",
+                      "label": "Idle",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-e2",
+                      "type": "state",
+                      "label": "onSubmit",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s3",
+                      "type": "state",
+                      "label": "Pending",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-a2",
+                      "type": "state",
+                      "label": "fetchData()",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s4",
+                      "type": "state",
+                      "label": "Authenticated",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-e3",
+                      "type": "state",
+                      "label": "Timeout",
+                      "isSelectable": true
+                    },
+                    {
+                      "id": "ans-s5",
+                      "type": "state",
+                      "label": "Error",
+                      "isSelectable": true
                     }
                   ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-s1",
-                    "type": "process",
-                    "label": "Processing"
-                  },
-                  {
-                    "id": "ans-s2",
-                    "type": "process",
-                    "label": "CalculateTotal"
-                  },
-                  {
-                    "id": "ans-s3",
-                    "type": "process",
-                    "label": "User clicks button"
-                  }
-                ],
-                "answer": [
-                  "ans-s1"
-                ],
-                "explanation": "States are usually adjectives or noun phrases describing a condition. 'CalculateTotal' is an action, and 'User clicks button' is an event."
+                }
               },
               {
                 "prompt": "How are Events named?",
                 "theory": "### Concept of an Event\n\nAn **Event** is a significant occurrence that has a location in time and space. In Statecharts, events are the triggers that cause state transitions.\nNames of events are usually verbs or actions (e.g., `click`, `timeout`, `submit`).",
                 "description": "Select 4 correct Event names from the options below.",
                 "selectableDiagram": {
-                  "layout": "flow",
+                  "layout": "wrap",
                   "minSelection": 4,
                   "nodes": [
                     {
@@ -393,31 +397,12 @@ export const courses = [
           {
             "id": "l1-m3",
             "title": "Advanced Basic Concepts",
-            "badge": "Checkpoint",
             "questions": [
               {
                 "prompt": "Distinguish 2 types of Statecharts",
                 "theory": "### Behavioral vs. Protocol Statecharts\n\n1. **Behavioral State Machine**: Used to specify the exact behavior (implementation) of a part of a system.\n2. **Protocol State Machine**: Used to specify the valid sequences of events that an object may receive, without defining its exact behavior. Often used for interfaces or network protocols.",
                 "theoryMermaid": "graph TD\n  A[Statechart] --> B(Behavioral)\n  A --> C(Protocol)\n  B --> D[Implementation Details]\n  C --> E[Valid Event Sequences]\n  style B fill:#bfdbfe\n  style C fill:#bbf7d0",
-                "description": "Which type of statechart describes implementation details?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Implementation Details"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "modeled by"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
+                "description": "Drag and drop the correct statechart type to its definition.",
                 "cards": [
                   {
                     "id": "type-behav",
@@ -436,72 +421,52 @@ export const courses = [
                   }
                 ],
                 "answer": [
-                  "type-behav"
+                  "type-behav",
+                  "type-proto"
                 ],
-                "explanation": "Behavioral State Machines model the internal logic and implementation details of a system component."
+                "explanation": "Behavioral State Machines model internal logic (implementation), while Protocol State Machines model valid sequences of events (interfaces).",
+                "slots": [
+                  "Used to specify exact implementation:",
+                  "Used to specify valid event sequences:"
+                ]
               },
               {
                 "prompt": "Guard Conditions - Basic Idea",
-                "theory": "### Guard Conditions\n\nSometimes an event occurs, but we only want to change state if a specific condition is true. This is called a **Guard**.\nA guard is a boolean expression evaluated dynamically when the event is triggered. If false, the transition does not occur.",
-                "description": "What determines if an event is allowed to cause a transition?",
-                "interactiveDiagram": {
-                  "layout": "flow",
+                "theory": "### Guard Conditions\n\nSometimes an event occurs, but we only want to change state if a specific condition is true. This is called a **Guard**.\nA guard is a boolean expression evaluated dynamically when the event is triggered. If false, the transition does not occur.\nIn state diagrams, a Guard Condition is often represented by a **diamond shape (choice pseudostate)** with [yes]/[no] branches, or simply by text in square brackets like [condition] on a transition.",
+                "description": "Select the state chart that contains a Guard Condition (diamond shape).",
+                "answer": [
+                  "opt2"
+                ],
+                "explanation": "A Guard Condition is represented by a diamond shape (choice pseudostate) which splits the flow based on a condition like [isValid] or [else].",
+                "selectableDiagram": {
+                  "layout": "wrap",
+                  "minSelection": 1,
                   "nodes": [
                     {
+                      "id": "opt1",
                       "type": "state",
-                      "label": "Allows Transition"
+                      "isSelectable": true,
+                      "mermaid": "stateDiagram-v2\n  Idle --> Processing : click"
                     },
                     {
-                      "type": "transition",
-                      "label": "checked by"
+                      "id": "opt2",
+                      "type": "state",
+                      "isSelectable": true,
+                      "mermaid": "stateDiagram-v2\n  state if_state <<choice>>\n  Idle --> if_state : submit\n  if_state --> Success : [isValid]\n  if_state --> Error : [else]"
                     },
                     {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
+                      "id": "opt3",
+                      "type": "state",
+                      "isSelectable": true,
+                      "mermaid": "stateDiagram-v2\n  Idle --> Timeout : timer\n  Timeout --> Idle : reset"
                     }
                   ]
-                },
-                "cards": [
-                  {
-                    "id": "ans-g1",
-                    "type": "document",
-                    "label": "Guard Condition"
-                  },
-                  {
-                    "id": "ans-g2",
-                    "type": "document",
-                    "label": "Event Name"
-                  },
-                  {
-                    "id": "ans-g3",
-                    "type": "document",
-                    "label": "State Parameter"
-                  }
-                ],
-                "answer": [
-                  "ans-g1"
-                ],
-                "explanation": "A Guard Condition must evaluate to true for the transition to proceed when the event fires."
+                }
               },
               {
                 "prompt": "Actions vs Transitions",
                 "theory": "### Actions\n\nWhen a transition occurs, it can trigger an **Action**. An action is an instantaneous, uninterruptible behavior (like updating a variable, or sending a quick message) that happens while moving between states.",
                 "description": "What happens during a transition?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "transition",
-                      "label": "Transition triggers"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-a1",
@@ -522,7 +487,10 @@ export const courses = [
                 "answer": [
                   "ans-a1"
                 ],
-                "explanation": "A transition can trigger an Action to be executed as the object moves from one state to another."
+                "explanation": "A transition can trigger an Action to be executed as the object moves from one state to another.",
+                "slots": [
+                  "Transition triggers:"
+                ]
               }
             ]
           },
@@ -603,24 +571,6 @@ export const courses = [
                 "prompt": "Identify parts of a transition",
                 "theory": "### Quick Recap\n\nA full transition label often looks like this conceptually: `Event [Guard] / Action`.\nLet's see if you can identify which is which.",
                 "description": "In the phrase `click [isValid] / submitForm()`, what is `submitForm()`?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "process",
-                      "label": "submitForm()"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is the"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-p1",
@@ -641,30 +591,15 @@ export const courses = [
                 "answer": [
                   "ans-p1"
                 ],
-                "explanation": "`submitForm()` is the Action that gets executed if the `click` event occurs and the `isValid` guard is true."
+                "explanation": "`submitForm()` is the Action that gets executed if the `click` event occurs and the `isValid` guard is true.",
+                "slots": [
+                  "submitForm() is the:"
+                ]
               },
               {
                 "prompt": "True or False: Statecharts model static class fields",
                 "theory": "### The Core Purpose\n\nRemember, Statecharts are specifically designed for dynamic, reactive logic over time, tracking states, events, and transitions.",
                 "description": "Statecharts are used to document the static fields and database schema of an application.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Statement is"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "?"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-f1",
@@ -680,7 +615,10 @@ export const courses = [
                 "answer": [
                   "ans-f1"
                 ],
-                "explanation": "False! Statecharts model dynamic behavior, while Class Diagrams model static fields and schemas."
+                "explanation": "False! Statecharts model dynamic behavior, while Class Diagrams model static fields and schemas.",
+                "slots": [
+                  "Statement is:"
+                ]
               }
             ]
           }
@@ -699,24 +637,6 @@ export const courses = [
                 "theory": "\n### When is a Statechart necessary?\n\nYou should use a statechart when an object has **many distinct states** and its behavior changes drastically depending on its current state.\nExample: A Microwave (Idle, Heating, Paused, Error) is a great candidate.\nA simple `User` class with just getters/setters (Name, Age) does **not** need a statechart.\n                ",
                 "theoryMermaid": "graph LR\n                  A[Complex Object] -->|Yes| B(Statechart)\n                  C[Simple Data Class] -->|No| D(Don't use)\n                  style B fill:#bbf7d0,stroke:#22c55e\n                  style D fill:#fecaca,stroke:#ef4444\n                ",
                 "description": "Select the most appropriate case to use a Statechart.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Statechart Use Case"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "applies to"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "use-complex",
@@ -737,31 +657,16 @@ export const courses = [
                 "answer": [
                   "use-complex"
                 ],
-                "explanation": "Statecharts are best for objects with complex reactive behavior depending on their current state."
+                "explanation": "Statecharts are best for objects with complex reactive behavior depending on their current state.",
+                "slots": [
+                  "Statechart Use Case applies to:"
+                ]
               },
               {
                 "prompt": "Identify basic components",
                 "theory": "\n### Core Components\n\n1. **State**: A condition or situation during the life of an object.\n2. **Transition**: A relationship between two states indicating that an object will perform certain actions and enter the second state.\n3. **Event**: An occurrence that triggers a transition.\n4. **Initial/Final State**: Special markers showing where the machine starts and ends.\n                ",
                 "theoryMermaid": "stateDiagram-v2\n                  [*] --> Active\n                  Active --> [*]\n                  Active --> Paused : PauseEvent\n                  Paused --> Active : ResumeEvent\n                ",
                 "description": "What represents the occurrence that triggers a state transition?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Triggers Transition"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is called"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "comp-event",
@@ -782,31 +687,16 @@ export const courses = [
                 "answer": [
                   "comp-event"
                 ],
-                "explanation": "An Event is what triggers a transition from one state to another."
+                "explanation": "An Event is what triggers a transition from one state to another.",
+                "slots": [
+                  "Triggers Transition is called:"
+                ]
               },
               {
                 "prompt": "Three standard events",
                 "theory": "\n### Internal Actions inside a State\n\nWithin a state, there are 3 standard predefined events:\n- **entry**: Action executed as soon as the object enters the state.\n- **exit**: Action executed just before the object leaves the state.\n- **do**: Action executed continuously (or a long-running activity) while the object remains in the state.\n                ",
                 "theoryMermaid": "stateDiagram-v2\n                  state \"Typing\" as T\n                  note right of T\n                    entry / startTimer\n                    do / blinkCursor\n                    exit / saveDraft\n                  end note\n                ",
                 "description": "Which action runs continuously while staying in a state?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Continuous Action"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "keyword"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "evt-do",
@@ -827,7 +717,10 @@ export const courses = [
                 "answer": [
                   "evt-do"
                 ],
-                "explanation": "The 'do' activity runs continuously as long as the state is active."
+                "explanation": "The 'do' activity runs continuously as long as the state is active.",
+                "slots": [
+                  "Continuous Action keyword:"
+                ]
               }
             ]
           },
@@ -841,24 +734,6 @@ export const courses = [
                 "theory": "\n### Transition Syntax\n\nThe standard format for a transition label is:\n`Event [Guard] / Action`\n- **Event**: What triggered it.\n- **Guard**: A boolean condition that MUST be true for the transition to happen.\n- **Action**: A quick, uninterruptible behavior executed during the transition.\n\n### Internal Transition\nIf an event happens but the state **doesn't change** (it stays in the same state), it's an internal transition. (e.g. `typeKey / updateDisplay`).\n                ",
                 "theoryMermaid": "stateDiagram-v2\n                  Idle --> Processing : clickBtn [isValid] / showLoader\n                ",
                 "description": "What part of the syntax determines if a transition is allowed to proceed?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Condition check"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "keyword"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "process"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "syn-guard",
@@ -879,31 +754,16 @@ export const courses = [
                 "answer": [
                   "syn-guard"
                 ],
-                "explanation": "The Guard is a boolean condition in brackets that must evaluate to true."
+                "explanation": "The Guard is a boolean condition in brackets that must evaluate to true.",
+                "slots": [
+                  "Condition check keyword:"
+                ]
               },
               {
                 "prompt": "How to identify States and Events",
                 "theory": "\n### Tips for Requirements Analysis\n\nWhen reading a system requirement document:\n- **States** usually correspond to **adjectives** or conditions describing the object (e.g., *empty*, *running*, *pending*).\n- **Events** usually correspond to **verbs** or actions happening to the object (e.g., *click*, *expire*, *submit*).\n                ",
                 "theoryMermaid": "graph LR\n                  A[Adjectives] -->|become| B(States)\n                  C[Verbs] -->|become| D(Events)\n                  style B fill:#bfdbfe\n                  style D fill:#fef08a\n                ",
                 "description": "In 'The door is locked until unlocked by the user', what is 'locked'?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "process",
-                      "label": "'locked'"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "maps to"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "map-state",
@@ -924,7 +784,10 @@ export const courses = [
                 "answer": [
                   "map-state"
                 ],
-                "explanation": "'Locked' is an adjective describing the condition of the door, hence it is a State."
+                "explanation": "'Locked' is an adjective describing the condition of the door, hence it is a State.",
+                "slots": [
+                  "'locked' maps to:"
+                ]
               }
             ]
           },
@@ -937,37 +800,6 @@ export const courses = [
                 "prompt": "Action vs Activity",
                 "theory": "### Actions vs Activities\n- **Action**: Instantaneous behavior on transition (`/ sendEmail()`).\n- **Activity**: Ongoing behavior inside a State (`do / blinkLight()`).",
                 "description": "Drag the behaviors to their correct categories.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Instantaneous (Transition)"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is called"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    },
-                    {
-                      "type": "state",
-                      "label": "Ongoing (State)"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "is called"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 1,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-act-1",
@@ -984,30 +816,16 @@ export const courses = [
                   "ans-act-1",
                   "ans-act-2"
                 ],
-                "explanation": "Action happens during transition. Activity runs while inside a state."
+                "explanation": "Action happens during transition. Activity runs while inside a state.",
+                "slots": [
+                  "Instantaneous (Transition) is called:",
+                  "Ongoing (State) is called:"
+                ]
               },
               {
                 "prompt": "Guard Conditions",
                 "theory": "### Guard Conditions\nA **Guard** `[condition]` must be true for the transition to fire.\nEvaluated at the exact moment the event occurs.",
                 "description": "Select the correct syntax for a Guard.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Guard Syntax"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "uses format"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-g-1",
@@ -1028,7 +846,10 @@ export const courses = [
                 "answer": [
                   "ans-g-1"
                 ],
-                "explanation": "Guards are enclosed in square brackets [ ]."
+                "explanation": "Guards are enclosed in square brackets [ ].",
+                "slots": [
+                  "Guard Syntax uses format:"
+                ]
               },
               {
                 "prompt": "Build a complete Transition & State logic",
@@ -1129,24 +950,6 @@ export const courses = [
                 "theory": "\n### How to draw a UML Statechart\nBuilding a statechart must follow this sequence:\n1. **Step 1**: Identify the initial and final states.\n2. **Step 2**: Identify all possible states the object can exist in (based on relevant attributes).\n3. **Step 3**: Label the events that trigger these transitions.\n\n### Important Rules:\n- The name of each transition must be **unique**.\n- Only build diagrams for objects with **significant dynamic behavior**.\n- Base the diagram on **Use cases**, as they describe how the object reacts to system scenarios.\n                ",
                 "theoryMermaid": "graph TD\n                  A[Step 1: Init/Final] --> B[Step 2: States]\n                  B --> C[Step 3: Events]\n                  style A fill:#bfdbfe,stroke:#3b82f6\n                  style B fill:#bbf7d0,stroke:#22c55e\n                  style C fill:#fef08a,stroke:#eab308\n                ",
                 "description": "What should NOT be the basis for building a statechart?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Statechart Basis"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "NOT used for"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "rule-usecase",
@@ -1167,7 +970,10 @@ export const courses = [
                 "answer": [
                   "rule-code"
                 ],
-                "explanation": "Statecharts are built based on Use cases and important object attributes, not primarily for auto-generating code during implementation."
+                "explanation": "Statecharts are built based on Use cases and important object attributes, not primarily for auto-generating code during implementation.",
+                "slots": [
+                  "Statechart Basis NOT used for:"
+                ]
               },
               {
                 "prompt": "Complete the Elevator statechart",
@@ -1227,24 +1033,6 @@ export const courses = [
                 "theory": "\n### Concept of Composite States\n\nSometimes the state of an object is very complex and can contain **nested sub-states**. This is called a Composite State.\n\nFor example, in a \"Phone Call\" use case:\nThe phone has 2 main states: **Idle** and **Active**.\nHowever, **Active** is not simple; it contains a sequence of sub-states:\n1. **PlayingDialTone**\n2. **Dialing**\n3. **Connecting**\n4. **Talking**\n\nGrouping them into the **Active** composite state simplifies the diagram. A single `on hook` event arrow drawn from the outer boundary of Active is enough to represent disconnection from any of its sub-states.\n                ",
                 "theoryMermaid": "stateDiagram-v2\n                  [*] --> Idle\n                  Idle --> Active : off hook\n                  state Active {\n                    [*] --> PlayingDialTone\n                    PlayingDialTone --> Dialing : digit\n                    Dialing --> Connecting : completed\n                    Connecting --> Talking : connected\n                  }\n                  Active --> Idle : on hook\n                ",
                 "description": "How does using a composite state help in the Phone example regarding the 'on hook' event?",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Composite State"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "helps to"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "state"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "comp-1",
@@ -1265,7 +1053,10 @@ export const courses = [
                 "answer": [
                   "comp-1"
                 ],
-                "explanation": "By grouping sub-states into Active, we only need ONE 'on hook' arrow from the outer Active boundary instead of drawing 4 individual arrows from the 4 sub-states."
+                "explanation": "By grouping sub-states into Active, we only need ONE 'on hook' arrow from the outer Active boundary instead of drawing 4 individual arrows from the 4 sub-states.",
+                "slots": [
+                  "Composite State helps to:"
+                ]
               }
             ]
           },
@@ -1278,24 +1069,6 @@ export const courses = [
                 "prompt": "Remembering past states",
                 "theory": "### History Pseudo-state\nRestores the last active sub-state when re-entering a composite state.",
                 "description": "Identify the History State symbol.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Remembers past state"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "uses symbol"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-hist-1",
@@ -1316,30 +1089,15 @@ export const courses = [
                 "answer": [
                   "ans-hist-1"
                 ],
-                "explanation": "The standard UML symbol for a history state is an H enclosed in a circle."
+                "explanation": "The standard UML symbol for a history state is an H enclosed in a circle.",
+                "slots": [
+                  "Remembers past state uses symbol:"
+                ]
               },
               {
                 "prompt": "Dynamic Branching",
                 "theory": "### Choice Pseudo-state\nA **Choice** (diamond symbol) is used for dynamic branching based on guards evaluated *during* the transition.",
                 "description": "Select the shape used for Choice pseudo-states.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Choice / Branching"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "uses shape"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-choice-1",
@@ -1360,48 +1118,15 @@ export const courses = [
                 "answer": [
                   "ans-choice-1"
                 ],
-                "explanation": "A Diamond shape is universally used in UML for Choice pseudo-states."
+                "explanation": "A Diamond shape is universally used in UML for Choice pseudo-states.",
+                "slots": [
+                  "Choice / Branching uses shape:"
+                ]
               },
               {
                 "prompt": "Identify Advanced Statechart Features",
                 "theory": "### Level 3 Review\nYou've learned about:\n- **Composite States**: Nested sub-states.\n- **Choice Pseudo-states**: Dynamic branching.\n- **History States**: Remembering the last active sub-state.\nLet's review these advanced concepts.",
                 "description": "Match the advanced feature to its correct position in the flow.",
-                "interactiveDiagram": {
-                  "layout": "flow",
-                  "nodes": [
-                    {
-                      "type": "state",
-                      "label": "Evaluate"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "branch via"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 0,
-                      "slotType": "document"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "success"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 1,
-                      "slotType": "document"
-                    },
-                    {
-                      "type": "transition",
-                      "label": "resume later via"
-                    },
-                    {
-                      "type": "slot",
-                      "index": 2,
-                      "slotType": "document"
-                    }
-                  ]
-                },
                 "cards": [
                   {
                     "id": "ans-cp3-1",
@@ -1424,7 +1149,12 @@ export const courses = [
                   "ans-cp3-2",
                   "ans-cp3-3"
                 ],
-                "explanation": "We branch using a Choice Diamond, enter a complex Composite State, and can resume it later using a History State."
+                "explanation": "We branch using a Choice Diamond, enter a complex Composite State, and can resume it later using a History State.",
+                "slots": [
+                  "Evaluate branch via:",
+                  "success:",
+                  "resume later via:"
+                ]
               }
             ]
           }

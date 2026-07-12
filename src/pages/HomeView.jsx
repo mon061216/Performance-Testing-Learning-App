@@ -13,7 +13,7 @@ export function HomeView() {
     <main className="home-view">
       <div className="home-hero">
         <motion.img 
-          src="/cat_mascot.png" 
+          src="/cat_mascot_transparent.png" 
           alt="Performance Testing Mascot" 
           className="home-mascot"
           initial={{ y: 20, opacity: 0 }}
@@ -69,7 +69,7 @@ export function HomeView() {
                 e.stopPropagation();
                 navigate(`/course/${course.id}`);
               }}>
-                {done === 0 ? "Start" : done >= total ? "Review" : "Continue"}
+                {done === 0 ? "Start" : done >= total ? "Start" : "Continue"}
               </button>
             </motion.div>
           );

@@ -17,8 +17,8 @@ export function InteractiveDiagram({
     const index = node.index;
     const cardId = placements[index];
     const card = cardId ? question.cards.find(c => c.id === cardId) : null;
-    const isCorrect = result?.locked && cardId === question.answer[index];
-    const isWrong = result?.kind === 'try' && cardId !== question.answer[index] && cardId;
+    const isCorrect = result?.locked && (question.orderMatters === false ? question.answer.includes(cardId) : cardId === question.answer[index]);
+    const isWrong = result?.kind === 'try' && cardId && (question.orderMatters === false ? !question.answer.includes(cardId) : cardId !== question.answer[index]);
 
     return (
       <div 

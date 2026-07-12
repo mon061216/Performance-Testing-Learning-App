@@ -124,7 +124,12 @@ export function Exercise() {
       const allSelectedAreCorrect = selections.every(id => question.answer.includes(id));
       correct = isCountCorrect && allSelectedAreCorrect;
     } else {
-      correct = placements.every((id, index) => id === question.answer[index]);
+      if (question.orderMatters === false) {
+        correct = placements.length === question.answer.length && 
+                  placements.every(id => question.answer.includes(id));
+      } else {
+        correct = placements.every((id, index) => id === question.answer[index]);
+      }
     }
 
     if (correct) {
@@ -134,6 +139,16 @@ export function Exercise() {
 
     // Fail, but allow retry
     setResult({ kind: "try", locked: false, title: "Incorrect!" });
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((i) => i - 1);
+      setResult(null);
+      setPlacements(Array(lesson.questions[currentQuestionIndex - 1]?.answer?.length || 0).fill(null));
+      setSelections([]);
+      setDraggedId(null);
+    }
   };
 
   const handleNext = () => {
@@ -173,7 +188,10 @@ export function Exercise() {
     <main className="exercise centered-layout" style={{ "--accent": course.accent }}>
       
       <div className="centered-header">
-        <button className="close-lesson" onClick={() => navigate(`/course/${course.id}`)}>&times;</button>
+        <button className="close-lesson" onClick={() => navigate(`/course/${course.id}`)} title="Close Lesson">&times;</button>
+        {currentQuestionIndex > 0 && (
+          <button className="close-lesson" onClick={handlePrev} title="Previous Question" style={{ fontSize: '2rem', marginTop: '2px', fontWeight: 'bold' }}>&larr;</button>
+        )}
         <div className="progress-bar-container">
           <div className="progress-bar-fill" style={{ width: `${((currentQuestionIndex + 1) / lesson.questions.length) * 100}%`}}></div>
         </div>
@@ -232,8 +250,8 @@ export function Exercise() {
             <div className="widget-slots">
               {question.slots.map((slot, index) => {
                 const card = placements[index] ? findCard(placements[index]) : null;
-                const isCorrect = result?.locked && placements[index] === question.answer[index];
-                const isWrong = result?.kind === 'try' && placements[index] !== question.answer[index] && placements[index];
+                const isCorrect = result?.locked && (question.orderMatters === false ? question.answer.includes(placements[index]) : placements[index] === question.answer[index]);
+                const isWrong = result?.kind === 'try' && placements[index] && (question.orderMatters === false ? !question.answer.includes(placements[index]) : placements[index] !== question.answer[index]);
 
                 return (
                   <div key={`${slot}-${index}`} className="slot-wrapper">

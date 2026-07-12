@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { MermaidDiagram } from './MermaidDiagram';
 
 export function SelectableDiagram({ 
   diagram, 
@@ -28,8 +29,10 @@ export function SelectableDiagram({
           resultClass = 'correct'; // User selected it and it's correct
         }
       } else if (result.kind === 'try') {
-        if (isSelected && !question.answer.includes(node.id)) {
-          resultClass = 'wrong'; // Highlight the wrong choices
+        if (diagram.layout !== 'wrap') {
+          if (isSelected && !question.answer.includes(node.id)) {
+            resultClass = 'wrong'; // Highlight the wrong choices
+          }
         }
       }
     }
@@ -47,7 +50,7 @@ export function SelectableDiagram({
       return (
         <div {...commonProps} className={`diagram-node initial-state-container ${isSelectable ? 'selectable-node' : ''} ${isSelected ? 'selected' : ''} ${resultClass}`}>
           <div className="initial-state-marker"></div>
-          {node.label && <span className="node-label">{node.label}</span>}
+          {node.label && <span className="node-label">{node.mermaid ? <MermaidDiagram chart={node.mermaid} /> : node.label}</span>}
         </div>
       );
     }
